@@ -14,7 +14,7 @@ const char* password = "expeditious";
 String command;
 unsigned long previousRequest = 0;
 //Objects
-WiFiClient master;
+WiFiClient host;
 IPAddress server(192, 168, 127, 85);
 float t;
 float h;
@@ -53,20 +53,20 @@ void setup() {
 
 void loop() {
   dhtSensorLoop();
-  requestMaster();
+  requestHost();
 }
 
-void requestMaster() { /* function requestMaster */
-  ////Request to master
+void requestHost() { /* function requestMaster */
+  ////Request to host
   if ((millis() - previousRequest) > UPDATE_TIME) {  // client connect to server every 500ms
     previousRequest = millis();
-    if (master.connect(server, 80)) {  // Connection to the server
-      master.println(nom + ": Current state is x[" + String(!digitalRead(LED)) + "]x Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h \r");
+    if (host.connect(server, 80)) {  // Connection to the server
+      host.println(nom + ": Current state is x[" + String(!digitalRead(LED)) + "]x Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h \r");
 
       //answer
-      String answer = master.readStringUntil('\r');  // receives the answer from the sever
+      String answer = host.readStringUntil('\r');  // receives the answer from the sever
       
-      master.flush();
+      host.flush();
       Serial.println("from " + answer);
       if (answer.indexOf("x") >= 0) {
         command = answer.substring(answer.indexOf("x") + 1, answer.length());
