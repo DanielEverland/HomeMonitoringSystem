@@ -12,6 +12,7 @@ bool sendCmd = false;
 String slaveCmd = "0";
 String slaveState = "0";
 String tempState = "0";
+String humState = "0";
 
 //Objects
 WiFiServer server(80);
@@ -46,23 +47,28 @@ void clientRequest() { /* function clientRequest */
   if (client) {
     if (client.connected()) {
       //Print client IP address
-      Serial.print(" ->");
-      Serial.println(client.remoteIP());
+      /*Serial.print(" ->");
+      Serial.println(client.remoteIP());*/
+      
       String request = client.readStringUntil('\r');  //receives the message from the client
 
       if (request.indexOf("Client0") == 0) {
-        //Handle slave request
-        Serial.print("From ");
+        Serial.print("I received: ");
         Serial.println(request);
+
+        //Handle slave request
+        /*Serial.print("From ");
+        Serial.println(request);*/
         int index = request.indexOf(":");
         String slaveid = request.substring(0, index);
-        slaveState = request.substring(request.indexOf("x") + 1, request.lastIndexOf("x"));
-        tempState = request.substring(request.indexOf("t") + 1, request.lastIndexOf("t"));
+        slaveState = request.substring(request.indexOf("x[") + 2, request.lastIndexOf("]x"));
+        tempState = request.substring(request.indexOf("t[") + 2, request.lastIndexOf("]t"));
+        humState = request.substring(request.indexOf("h[") + 2, request.lastIndexOf("]h"));
 
-        Serial.print("state received: ");
+        /*Serial.print("state received: ");
         Serial.println(slaveState);
         Serial.print("temperature received: ");
-        Serial.println(tempState);
+        Serial.println(tempState);*/
 
         client.print(nom);
         if (sendCmd) {
@@ -73,8 +79,8 @@ void clientRequest() { /* function clientRequest */
         }
         client.stop();  // terminates the connection with the client
       } else {
-        Serial.print("From Browser : ");
-        Serial.println(request);
+        /*Serial.print("From Browser : ");
+        Serial.println(request);*/
         client.flush();
         handleRequest(request);
         webpage(client);
@@ -131,6 +137,7 @@ void webpage(WiFiClient browser) { /* function webpage */
   browser.println("<br><br>");
   browser.println("<br><br>");
   browser.println("<h2> Data </h2>");
+
   browser.println("<center>");
   browser.println("<table border='5'>");
   browser.println("<tr>");
@@ -149,6 +156,38 @@ void webpage(WiFiClient browser) { /* function webpage */
   browser.println("</tr>");
   browser.println("</table>");
   browser.println("</center>");
+
+
+  // Temperature:
+  browser.println("<center>");
+  browser.println("<table border='5'>");
+  browser.println("<tr>");
+  
+  browser.print("<td>Temperature</td");
+  browser.println("<br />");
+  browser.print(tempState);
+  browser.print("C");
+  
+  browser.println("</tr>");
+  browser.println("</table>");
+  browser.println("</center>");
+
+
+  // Humidity
+  browser.println("<center>");
+  browser.println("<table border='5'>");
+  browser.println("<tr>");
+  
+  browser.print("<td>Humidity</td");
+  browser.println("<br />");
+  browser.print(humState);
+  browser.print("%");
+  
+  browser.println("</tr>");
+  browser.println("</table>");
+  browser.println("</center>");
+
+  
   browser.println("</body></html>");
   delay(1);
 }
