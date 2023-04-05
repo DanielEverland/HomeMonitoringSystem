@@ -21,6 +21,8 @@ float h;
 float f;
 
 // Initialize DHT sensor.
+// From left to right facing the sensor:
+// S, VCC, GND
 const int DHTPin = D3;
 DHT dht(DHTPin, DHTTYPE);
 
