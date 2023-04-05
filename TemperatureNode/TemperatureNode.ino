@@ -4,7 +4,7 @@
 
 //Constants
 #define LED D4
-#define UPDATE_TIME 500
+#define UPDATE_TIME 1000
 #define DHTTYPE DHT11  // DHT 11
 //Parameters
 String nom = "Client0";
@@ -60,26 +60,8 @@ void requestHost() { /* function requestMaster */
   ////Request to host
   if ((millis() - previousRequest) > UPDATE_TIME) {  // client connect to server every 500ms
     previousRequest = millis();
-    if (host.connect(server, 80)) {  // Connection to the server
+    if (host.connect(server, 81)) {  // Connection to the server
       host.println(nom + ": Current state is x[" + String(!digitalRead(LED)) + "]x Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h \r");
-
-      //answer
-      String answer = host.readStringUntil('\r');  // receives the answer from the sever
-      
-      host.flush();
-      Serial.println("from " + answer);
-      if (answer.indexOf("x") >= 0) {
-        command = answer.substring(answer.indexOf("x") + 1, answer.length());
-        Serial.print("command received: ");
-        Serial.println(command);
-        if (command == "1") {
-          Serial.println("LED ON");
-          digitalWrite(LED, LOW);
-        } else {
-          Serial.println("LED OFF");
-          digitalWrite(LED, HIGH);
-        }
-      }
     }
   }
 }
