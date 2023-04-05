@@ -12,6 +12,8 @@
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 
+void clientRequest();
+
 // Replace with your network credentials
 const char* ssid = "Galaxy A53";
 const char* password = "expeditious";
@@ -35,6 +37,13 @@ AsyncWebServer server(80);
 // Generally, you should use "unsigned long" for variables that hold time
 // The value will quickly become too large for an int to store
 unsigned long previousMillis = 0;    // will store last time DHT was updated
+
+// WiFi server for connecting clients
+WiFiServer wifiServer(81);
+WiFiClient browser;
+IPAddress ip(192, 168, 158, 20);
+IPAddress gateway(192, 168, 1, 254);
+IPAddress subnet(255, 255, 255, 0);
 
 // Updates DHT readings every 10 seconds
 const long interval = 10000;  
@@ -86,7 +95,7 @@ setInterval(function ( ) {
   };
   xhttp.open("GET", "/temperature", true);
   xhttp.send();
-}, 10000 ) ;
+}, 1000 ) ;
 
 setInterval(function ( ) {
   var xhttp = new XMLHttpRequest();
@@ -97,7 +106,7 @@ setInterval(function ( ) {
   };
   xhttp.open("GET", "/humidity", true);
   xhttp.send();
-}, 10000 ) ;
+}, 1000 ) ;
 </script>
 </html>)rawliteral";
 
@@ -126,6 +135,8 @@ void setup(){
     Serial.println(".");
   }
 
+  wifiServer.begin();
+
   // Print ESP8266 Local IP Address
   Serial.println(WiFi.localIP());
 
@@ -145,6 +156,7 @@ void setup(){
 }
  
 void loop(){  
+  clientRequest();
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
     // save the last time you updated the DHT values
@@ -170,6 +182,26 @@ void loop(){
     else {
       h = newH;
       Serial.println(h);
+    }
+  }
+}
+
+void clientRequest() { /* function clientRequest */
+  ////Check if client connected
+  WiFiClient client = wifiServer.available();
+  client.setTimeout(50);
+  if (client) {
+    if (client.connected()) {
+      //Print client IP address
+      /*Serial.print(" ->");
+      Serial.println(client.remoteIP());*/
+      
+      String request = client.readStringUntil('\r');  //receives the message from the client
+      Serial.print("Request: ");
+      Serial.println(request);
+
+      t = strtof(request.substring(request.indexOf("t[") + 2, request.lastIndexOf("]t")).c_str(), nullptr);
+      h = strtof(request.substring(request.indexOf("h[") + 2, request.lastIndexOf("]h")).c_str(), nullptr);
     }
   }
 }
