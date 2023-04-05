@@ -13,6 +13,7 @@ String slaveCmd = "0";
 String slaveState = "0";
 String tempState = "0";
 String humState = "0";
+String lightState = "";
 
 //Objects
 WiFiServer server(80);
@@ -163,7 +164,7 @@ void webpage(WiFiClient browser) { /* function webpage */
   browser.println("<table border='5'>");
   browser.println("<tr>");
   
-  browser.print("<td>Temperature</td");
+  browser.print("<td>Light State</td");
   browser.println("<br />");
   browser.print(tempState);
   browser.print("C");
@@ -174,6 +175,22 @@ void webpage(WiFiClient browser) { /* function webpage */
 
 
   // Humidity
+  browser.println("<center>");
+  browser.println("<table border='5'>");
+  browser.println("<tr>");
+  
+  browser.print("<td>Humidity</td");
+  browser.println("<br />");
+  browser.print(humState);
+  browser.print("%");
+  
+  browser.println("</tr>");
+  browser.println("</table>");
+  browser.println("</center>");
+
+
+
+  // Light State
   browser.println("<center>");
   browser.println("<table border='5'>");
   browser.println("<tr>");
