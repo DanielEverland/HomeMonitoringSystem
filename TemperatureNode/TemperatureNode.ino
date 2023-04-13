@@ -59,6 +59,7 @@ void loop() {
 
 void requestHost() {
   if (host.connect(server, 81)) {
+    // Remove light value if unused
     host.println("c[" + nom + "]c" + ": Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h Current light level is: l[" + lightValue + "]l Light detected: ld[ " + lightDetected + " ]ld \r");
   }
 }

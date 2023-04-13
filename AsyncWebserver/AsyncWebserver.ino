@@ -95,6 +95,7 @@ void loop() {
 void handleTemperatureInput(String request) {
   t = strtof(getClientSubstring(request, "t").c_str(), nullptr);
   h = strtof(getClientSubstring(request, "h").c_str(), nullptr);
+  // Remove light value if unused
   l = strtof(getClientSubstring(request, "l").c_str(), nullptr);
   lightDetection = getClientSubstring(request, "ld");
 }
