@@ -3,7 +3,6 @@
 #include <DHT.h>
 
 //Constants
-#define LED D4
 #define UPDATE_TIME 1000
 #define DHTTYPE DHT11  // DHT 11
 //Parameters
@@ -61,7 +60,7 @@ void requestHost() { /* function requestMaster */
   if ((millis() - previousRequest) > UPDATE_TIME) {  // client connect to server every 500ms
     previousRequest = millis();
     if (host.connect(server, 81)) {  // Connection to the server
-      host.println(nom + ": Current state is x[" + String(!digitalRead(LED)) + "]x Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h \r");
+      host.println(nom + ": Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h \r");
     }
   }
 }
