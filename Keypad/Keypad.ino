@@ -1,88 +1,60 @@
-//https://diyi0t.com/keypad-arduino-esp8266-esp32/
 
-#include "Keypad.h"
-#include "Wire.h"
-// #include "LiquidCrystal_I2C.h"
 
-const byte ROWS = 4; //four rows
-const byte COLS = 4; //four columns
 
-char keys[ROWS][COLS] = {
-  {'1','2','3','A'},
-  {'4','5','6','B'},
-  {'7','8','9','C'},
-  {'*','0','#','D'}
+/*
+ * This ESP32 code is created by esp32io.com
+ *
+ * This ESP32 code is released in the public domain
+ *
+ * For more detail (instruction and wiring diagram), visit https://esp32io.com/tutorials/esp32-keypad
+ */
+
+#include <Keypad.h>
+
+#define ROW_NUM     4 // four rows
+#define COLUMN_NUM  4 // three columns
+
+char keys[ROW_NUM][COLUMN_NUM] = {
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
 };
 
-// For Arduino Microcontroller
-//byte rowPins[ROWS] = {9, 8, 7, 6}; 
-//byte colPins[COLS] = {5, 4, 3, 2}; 
+byte pin_rows[ROW_NUM] = {D1, D2, D3, D4}; // GIOP18, GIOP5, GIOP17, GIOP16 connect to the row pins
+byte pin_column[COLUMN_NUM] = {D5, D6, D7, D8};   // GIOP4, GIOP0, GIOP2 connect to the column pins
 
-// For ESP8266 Microcontroller
-byte rowPins[ROWS] = {1, 2, 3, 4}; 
-byte colPins[COLS] = {5, 6, 7, 8}; 
+Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 
-// For ESP32 Microcontroller
-//byte rowPins[ROWS] = {23, 22, 3, 21}; 
-//byte colPins[COLS] = {19, 18, 5, 17};
-
-Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
-//LiquidCrystal_I2C lcd(0x27, 20, 4); 
-
-const int len_key = 5;
-char master_key[len_key] = {'1','2','3','4','1'};
-char attempt_key[len_key];
-int z=0;
+const String password = "1111"; // change your password here
+String input_password;
 
 void setup() {
   Serial.begin(9600);
-  
+  input_password.reserve(32); // maximum input characters is 33, change if needed
 }
 
 void loop() {
   char key = keypad.getKey();
-  Serial.print("*");
-  if (key){
-    switch(key){
-      case '*':
-        z=0;
-        break;
-      case '#':
-        delay(100); // added debounce
-        checkKEY();
-        break;
-      default:
-         attempt_key[z]=key;
-         z++;
-      }
-  }
-}
 
-void checkKEY()
-{
-   int correct=0;
-   int i;
-   for (i=0; i<len_key; i++) {
-    if (attempt_key[i]==master_key[i]) {
-      correct++;
+  if (key) {
+    Serial.println(key);
+
+    if (key == '*') {
+      Serial.println("Starting over");
+      input_password = ""; // clear input password
+    } else if (key == 'D') {
+      if (password == input_password) {
+        Serial.println("The password is correct, ACCESS GRANTED!");
+        // DO YOUR WORK HERE
+
+      } else {
+        Serial.println("The password is incorrect, ACCESS DENIED!");
       }
+
+      input_password = ""; // clear input password
+    } else {
+      input_password += key; // append new character to input password string
     }
-   if (correct==len_key && z==len_key){
-    Serial.print("Correct Key");
-    delay(3000);
-    z=0;
-    
-    Serial.print("Insert Password");
-   }
-   else
-   {
-
-    Serial.print("Incorrect Key");
-    delay(3000);
-    z=0;
-    Serial.print("Insert Password");
-   }
-   for (int zz=0; zz<len_key; zz++) {
-    attempt_key[zz]=0;
-   }
+  }
 }
