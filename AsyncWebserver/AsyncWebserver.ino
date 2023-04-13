@@ -30,7 +30,7 @@ WiFiServer wifiServer(81);
 // Define static IP, gateway and subnet for better consistency
 
 // TODO: Check if this breaks client communication
-IPAddress ip(192, 168, 127, 20);
+IPAddress ip(192, 168, 127, 85);
 IPAddress gateway(192, 168, 127, 254);
 IPAddress subnet(255, 255, 255, 0);
 
