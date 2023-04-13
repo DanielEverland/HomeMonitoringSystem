@@ -12,6 +12,8 @@
 #include "Website.generated.h"
 
 
+//JEG ER SEJ
+
 // Replace with your network credentials
 const char* ssid = "Galaxy A53";
 const char* password = "expeditious";
