@@ -58,7 +58,7 @@ void requestHost() { /* function requestMaster */
   if ((millis() - previousRequest) > UPDATE_TIME) {  // client connect to server every 500ms
     previousRequest = millis();
     if (host.connect(server, 81)) {  // Connection to the server
-      host.println(nom + ": Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h \r");
+      host.println("c[" + nom + "]c" + ": Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h \r");
     }
   }
 }
