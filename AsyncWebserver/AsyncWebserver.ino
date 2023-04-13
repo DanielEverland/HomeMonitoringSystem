@@ -32,6 +32,7 @@ DHT dht(DHTPIN, DHTTYPE);
 float t = 0.0;
 float h = 0.0;
 String motionDetection = "";
+String rfidStatus = "";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
