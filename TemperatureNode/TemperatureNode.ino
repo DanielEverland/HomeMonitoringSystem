@@ -6,11 +6,10 @@
 #define UPDATE_TIME 1000
 #define DHTTYPE DHT11  // DHT 11
 //Parameters
-String nom = "Client0";
+String nom = "TemperatureNode";
 const char* ssid = "Galaxy A53";
 const char* password = "expeditious";
 //Variables
-String command;
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;

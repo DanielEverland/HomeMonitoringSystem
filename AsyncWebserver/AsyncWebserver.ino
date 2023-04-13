@@ -14,6 +14,7 @@
 #include "Website.generated.h"
 
 void clientRequest();
+String getClientSubstring();
 
 // Replace with your network credentials
 const char* ssid = "Galaxy A53";
@@ -23,8 +24,7 @@ const char* password = "expeditious";
 
 // Uncomment the type of sensor in use:
 #define DHTTYPE    DHT11     // DHT 11
-//#define DHTTYPE    DHT22     // DHT 22 (AM2302)
-//#define DHTTYPE    DHT21     // DHT 21 (AM2301)
+
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -144,9 +144,13 @@ void clientRequest() { /* function clientRequest */
       Serial.print("Request: ");
       Serial.println(request);
 
-      t = strtof(request.substring(request.indexOf("t[") + 2, request.lastIndexOf("]t")).c_str(), nullptr);
-      h = strtof(request.substring(request.indexOf("h[") + 2, request.lastIndexOf("]h")).c_str(), nullptr);
-      motionDetection = request.substring(request.indexOf("m[") + 2, request.lastIndexOf("]m"));
+      t = strtof(getClientSubstring(request, "t").c_str(), nullptr);
+      h = strtof(getClientSubstring(request, "h").c_str(), nullptr);
+      motionDetection = getClientSubstring(request, "m");
     }
   }
+}
+
+String getClientSubstring(String request, String identifier) {
+  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
 }
