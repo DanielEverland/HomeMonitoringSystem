@@ -51,4 +51,4 @@ void loop() {
   Serial.println(distanceInch);
   
   delay(1000);
-}
+}s
