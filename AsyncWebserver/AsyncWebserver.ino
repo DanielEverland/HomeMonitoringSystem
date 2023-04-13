@@ -31,7 +31,7 @@ DHT dht(DHTPIN, DHTTYPE);
 // current temperature & humidity, updated in loop()
 float t = 0.0;
 float h = 0.0;
-String motion = "";
+String motionDetection = "";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
