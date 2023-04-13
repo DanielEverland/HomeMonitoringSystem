@@ -7,7 +7,7 @@
 #define UPDATE_TIME 1000
 #define DHTTYPE DHT11
 //Parameters
-String nom = "TemperatureNode";
+String nom = "TemHumLightNode";
 const char* ssid = "Galaxy A53";
 const char* password = "expeditious";
 
