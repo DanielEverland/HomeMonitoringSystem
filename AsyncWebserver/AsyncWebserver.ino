@@ -1,4 +1,4 @@
-/*********
+ /*********
   Rui Santos
   Complete project details at https://randomnerdtutorials.com/esp8266-dht11dht22-temperature-and-humidity-web-server-with-arduino-ide/
 *********/
@@ -31,6 +31,7 @@ DHT dht(DHTPIN, DHTTYPE);
 // current temperature & humidity, updated in loop()
 float t = 0.0;
 float h = 0.0;
+String motion = "";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -89,6 +90,10 @@ void setup(){
   server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", String(h).c_str());
   });
+  server.on("/motionDetection", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", motionDetection.c_str());
+  });
+  
 
   // Start server
   server.begin();
@@ -141,6 +146,7 @@ void clientRequest() { /* function clientRequest */
 
       t = strtof(request.substring(request.indexOf("t[") + 2, request.lastIndexOf("]t")).c_str(), nullptr);
       h = strtof(request.substring(request.indexOf("h[") + 2, request.lastIndexOf("]h")).c_str(), nullptr);
+      motionDetection = strtof(request.substring(request.indexOf("m[") + 2, request.lastIndexOf("]m")).c_str(), nullptr);
     }
   }
 }

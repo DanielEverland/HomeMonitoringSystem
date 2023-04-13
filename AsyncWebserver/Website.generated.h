@@ -34,6 +34,11 @@ padding-bottom: 15px;
 <span id="humidity">%HUMIDITY%</span>
 <sup class="units">%</sup>
 </p>
+<p>
+<i class="fas fa-exclamation"></i>
+<span class="dht-labels">Motion</span>
+<span id="motionDetection">%Motion%</span>
+</p>
 </body>
 <script>
 setInterval(function ( ) {
@@ -55,7 +60,17 @@ document.getElementById("humidity").innerHTML = this.responseText;
 };
 xhttp.open("GET", "/humidity", true);
 xhttp.send();
-}, 1000 ) ;
+}, 1000);
+setInterval(function () {
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function () {
+if (this.readyState == 4 && this.status == 200) {
+document.getElementById("motionDetection").innerHTML = this.responseText;
+}
+};
+xhttp.open("GET", "/motionDetection", true);
+xhttp.send();
+}, 1000);
 </script>
 </html>
 )rawliteral";
