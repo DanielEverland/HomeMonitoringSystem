@@ -146,7 +146,7 @@ void clientRequest() { /* function clientRequest */
 
       t = strtof(request.substring(request.indexOf("t[") + 2, request.lastIndexOf("]t")).c_str(), nullptr);
       h = strtof(request.substring(request.indexOf("h[") + 2, request.lastIndexOf("]h")).c_str(), nullptr);
-      motionDetection = strtof(request.substring(request.indexOf("m[") + 2, request.lastIndexOf("]m")).c_str(), nullptr);
+      motionDetection = request.substring(request.indexOf("m[") + 2, request.lastIndexOf("]m"));
     }
   }
 }
