@@ -13,8 +13,8 @@
 #include <DHT.h>
 #include "Website.generated.h"
 
-void clientRequest();
-String getClientSubstring();
+//void clientRequest();
+//String getClientSubstring();
 
 // Replace with your network credentials
 const char* ssid = "Galaxy A53";
@@ -48,7 +48,11 @@ IPAddress gateway(192, 168, 1, 254);
 IPAddress subnet(255, 255, 255, 0);
 
 // Updates DHT readings every 10 seconds
-const long interval = 10000;  
+const long interval = 10000; 
+
+// Names of nodes
+const String proximityName = "ProximityNode";
+const String tempHumNode = "TemperatureNode";
 
 // Replaces placeholder with DHT values
 String processor(const String& var){
@@ -130,6 +134,17 @@ void loop(){
   }
 }
 
+void handleTemperatureInput(String request)
+{
+  t = strtof(getClientSubstring(request, "t").c_str(), nullptr);
+  h = strtof(getClientSubstring(request, "h").c_str(), nullptr);
+}
+
+void handleProximityInput(String request)
+{
+  motionDetection = getClientSubstring(request, "m");
+}
+
 void clientRequest() { /* function clientRequest */
   ////Check if client connected
   WiFiClient client = wifiServer.available();
@@ -139,14 +154,24 @@ void clientRequest() { /* function clientRequest */
       //Print client IP address
       /*Serial.print(" ->");
       Serial.println(client.remoteIP());*/
-      
+
       String request = client.readStringUntil('\r');  //receives the message from the client
       Serial.print("Request: ");
       Serial.println(request);
 
-      t = strtof(getClientSubstring(request, "t").c_str(), nullptr);
-      h = strtof(getClientSubstring(request, "h").c_str(), nullptr);
-      motionDetection = getClientSubstring(request, "m");
+      String clientName = getClientSubstring(request, "c");
+      if(clientName == tempHumNode)
+      {
+        handleTemperatureInput(request);
+      }
+      else if(clientName == proximityName)
+      {
+        handleProximityInput(request);
+      }
+      else
+      {
+        Serial.println("ERROR: Could not identify client name " + clientName);
+      }
     }
   }
 }
