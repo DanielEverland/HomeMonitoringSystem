@@ -54,6 +54,7 @@ const long interval = 10000;
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
+const String rfidNode = "RFIDNode";
 
 // Replaces placeholder with DHT values
 String processor(const String& var){
@@ -97,6 +98,9 @@ void setup(){
   });
   server.on("/motionDetection", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", motionDetection.c_str());
+  });
+  server.on("/rfid", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", rfidStatus.c_str());
   });
   
 
@@ -145,6 +149,10 @@ void handleProximityInput(String request)
 {
   motionDetection = getClientSubstring(request, "m");
 }
+void handleRFIDInput(String request)
+{
+    rfidStatus = getClientSubstring(request, "a");
+}
 
 void clientRequest() { /* function clientRequest */
   ////Check if client connected
@@ -168,6 +176,10 @@ void clientRequest() { /* function clientRequest */
       else if(clientName == proximityName)
       {
         handleProximityInput(request);
+      }
+      else if(clientName == rfidNode)
+      {
+        handleRFIDInput(request);
       }
       else
       {
