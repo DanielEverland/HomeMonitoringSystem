@@ -47,7 +47,6 @@ void setup() {
   Serial.print(nom);
   Serial.print(F(" connected to Wifi! IP address : "));
   Serial.println(WiFi.localIP());  // Print the IP address
-  pinMode(LED, OUTPUT);
 }
 
 void loop() {
