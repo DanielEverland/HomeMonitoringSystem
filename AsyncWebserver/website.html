@@ -1,43 +1,130 @@
 <!DOCTYPE HTML><html>
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  
+  <!-- solid style -->
+  <i class="fa-solid fa-user"></i>
+
+  <!-- regular style -->
+  <i class="fa-regular fa-user"></i>
+
+  <!-- light style -->
+  <i class="fa-light fa-user"></i>
+
+  <!-- duotone style -->
+  <i class="fa-duotone fa-user"></i>
+
+  <!-- all new thin style -->
+  <i class="fa-thin fa-user"></i>
+
+  <!-- all new sharp solid style -->
+  <i class="fa-sharp fa-solid fa-user"></i>
+
+  <!-- all new sharp regular style -->
+  <i class="fa-sharp fa-regular fa-user"></i>
+
+  <!-- all new sharp light style -->
+  <i class="fa-sharp fa-light fa-user"></i>
+
+  <!--brand icon-->
+  <i class="fa-brands fa-github-square"></i>
+
   <style>
     html {
-     font-family: Arial;
-     display: inline-block;
-     margin: 0px auto;
-     text-align: center;
+      font-family: 'Roboto', sans-serif;
+      display: inline-block;
+      margin: 0px auto;
+      text-align: center;
     }
-    h2 { font-size: 3.0rem; }
-    p { font-size: 3.0rem; }
-    .units { font-size: 1.2rem; }
+    h1 { font-size: 3.0rem; }
+    h2 { font-size: 1.5rem; }
+    p {
+      font-size: 1.0rem;
+      text-align: left;
+      text-indent: 25px;
+      line-height: 4.0px;
+    }
+    .units { font-size: 0.8rem; }
     .dht-labels{
-      font-size: 1.5rem;
+      font-size: 1.0rem;
       vertical-align:middle;
       padding-bottom: 15px;
+    }
+    .sidepanel {
+      width: 33.3333%;
+      position: fixed;
+      background-color: rgb(34, 35, 42);
+      color: aliceblue;
+      display: block;
+      height: 100%;
+      top: 0;
+      right: 0;
+      z-index: 1;
+      padding-top: 50px;
+    }
+    .sidepanel.header {
+      background-color: rgb(53, 45, 57);
+      padding-top: 15px;
+      height: 35px;
+      display: block;
+      z-index: 2;
+      text-align: left;
+      text-indent: 25px;
+      font-size: 1.2rem;
+    }
+    .mainpanel {
+      width: 66.666%;
+      background-color: rgb(22, 23, 29);
+      color: aliceblue;
+      stroke: black;
+      stroke-width: 1px;
+      position: fixed;
+      display: block;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    .title {
+      padding-left: 5px;
+      padding-top: 5px;
+      z-index: 3;
+      text-align: left;
+      color: #6b597b;
+      font-size:125%;
     }
   </style>
 </head>
 <body>
-  <h2>ESP8266 DHT Server</h2>
-  <p>
-    <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
-    <span class="dht-labels">Temperature</span> 
-    <span id="temperature">%TEMPERATURE%</span>
-    <sup class="units">&deg;C</sup>
-  </p>
-  <p>
-    <i class="fas fa-tint" style="color:#00add6;"></i> 
-    <span class="dht-labels">Humidity</span>
-    <span id="humidity">%HUMIDITY%</span>
-    <sup class="units">%</sup>
-  </p>
-  <p>
-    <i class="fas fa-exclamation"></i>
-    <span class="dht-labels">Motion</span>
-    <span id="motionDetection">%Motion%</span>
-  </p>
+  <div class="sidepanel">
+    <div class="sidepanel header">Raw Data</div>
+    <p>
+      <!--<i class="fas fa-thermometer-half" style="color:#059e8a;"></i> -->
+      <span class="dht-labels">Temperature</span> 
+      <span id="temperature">%TEMPERATURE%</span>
+      <sup class="units">&deg;C</sup>
+    </p>
+    <p>
+      <!-- <i class="fas fa-tint" style="color:#00add6;"></i> -->
+      <span class="dht-labels">Humidity</span>
+      <span id="humidity">%HUMIDITY%</span>
+      <sup class="units">%</sup>
+    </p>
+    <p>
+      <!-- <i class="fas fa-exclamation"></i> -->
+      <span class="dht-labels">Motion</span>
+      <span id="motionDetection">%Motion%</span>
+    </p>
+  </div>
+  <div class="mainpanel">
+    <div class="title">
+      <i class="fas fa-house-damage" style="font-size:150%;"></i>
+      <span class="title">Home Monitoring</span>
+    </div>
+  </div>   
 </body>
 <script>
 setInterval(function ( ) {
