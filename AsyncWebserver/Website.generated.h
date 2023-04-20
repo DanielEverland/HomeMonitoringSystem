@@ -23,13 +23,13 @@ padding-bottom: 15px;
 <body>
 <h2>ESP8266 DHT Server</h2>
 <p>
-<i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
-<span class="dht-labels">Temperature</span> 
+<i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+<span class="dht-labels">Temperature</span>
 <span id="temperature">%TEMPERATURE%</span>
 <sup class="units">&deg;C</sup>
 </p>
 <p>
-<i class="fas fa-tint" style="color:#00add6;"></i> 
+<i class="fas fa-tint" style="color:#00add6;"></i>
 <span class="dht-labels">Humidity</span>
 <span id="humidity">%HUMIDITY%</span>
 <sup class="units">%</sup>
@@ -38,6 +38,11 @@ padding-bottom: 15px;
 <i class="fas fa-exclamation"></i>
 <span class="dht-labels">Motion</span>
 <span id="motionDetection">%Motion%</span>
+</p>
+<p>
+<i class="fas fa-exclamation"></i>
+<span class="dht-labels">Keypad</span>
+<span id="keypad">%Keypad Status%</span>
 </p>
 </body>
 <script>
@@ -69,6 +74,16 @@ document.getElementById("motionDetection").innerHTML = this.responseText;
 }
 };
 xhttp.open("GET", "/motionDetection", true);
+xhttp.send();
+}, 1000);
+setInterval(function () {
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function () {
+if (this.readyState == 4 && this.status == 200) {
+document.getElementById("keypad").innerHTML = this.responseText;
+}
+};
+xhttp.open("GET", "/keypad", true);
 xhttp.send();
 }, 1000);
 </script>

@@ -41,7 +41,7 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
-const String keypadName = "keypadNode";
+const String keypadName = "KeypadNode";
 
 // Replaces placeholder with DHT values
 String processor(const String& var){
@@ -86,7 +86,7 @@ void setup(){
     request->send_P(200, "text/plain", motionDetection.c_str());
   });
     server.on("/keypad", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", motionDetection.c_str());
+    request->send_P(200, "text/plain", keypads.c_str());
   });
 
   // Start server
@@ -136,7 +136,7 @@ void clientRequest() { /* function clientRequest */
       {
         handleProximityInput(request);
       }
-      else if(clientName == keypadName);
+      else if(clientName == keypadName)
       {
         handleKeypadInput(request);
       }
