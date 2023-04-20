@@ -1,6 +1,6 @@
- /*********
-  Rui Santos
-  Complete project details at https://randomnerdtutorials.com/esp8266-dht11dht22-temperature-and-humidity-web-server-with-arduino-ide/
+/*********
+ Rui Santos
+ Complete project details at https://randomnerdtutorials.com/esp8266-dht11dht22-temperature-and-humidity-web-server-with-arduino-ide/
 *********/
 
 // Import required libraries
@@ -11,17 +11,18 @@
 #include <ESPAsyncWebServer.h>
 #include "Website.generated.h"
 
-//void clientRequest();
-//String getClientSubstring();
+// void clientRequest();
+// String getClientSubstring();
 
 // Replace with your network credentials
-const char* ssid = "Galaxy A53";
-const char* password = "expeditious";
+const char *ssid = "Galaxy A53";
+const char *password = "expeditious";
 
 // current temperature & humidity, updated in loop()
 float t = 0.0;
 float h = 0.0;
 String motionDetection = "";
+String keypads = "";
 String rfidStatus = "";
 
 // Create AsyncWebServer object on port 80
@@ -29,7 +30,7 @@ AsyncWebServer server(80);
 
 // Generally, you should use "unsigned long" for variables that hold time
 // The value will quickly become too large for an int to store
-unsigned long previousMillis = 0;    // will store last time DHT was updated
+unsigned long previousMillis = 0; // will store last time DHT was updated
 
 // WiFi server for connecting clients
 WiFiServer wifiServer(81);
@@ -41,28 +42,36 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
+
+const String keypadName = "KeypadNode";
+
 const String rfidNode = "RFIDNode";
 
 // Replaces placeholder with DHT values
-String processor(const String& var){
-  //Serial.println(var);
-  if(var == "TEMPERATURE"){
+String processor(const String &var)
+{
+  // Serial.println(var);
+  if (var == "TEMPERATURE")
+  {
     return String(t);
   }
-  else if(var == "HUMIDITY"){
+  else if (var == "HUMIDITY")
+  {
     return String(h);
   }
   return String();
 }
 
-void setup(){
+void setup()
+{
   // Serial port for debugging purposes
   Serial.begin(115200);
-  
+
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
   Serial.println("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(1000);
     Serial.println(".");
   }
@@ -73,28 +82,25 @@ void setup(){
   Serial.println(WiFi.localIP());
 
   // Route for root / web page
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", WEBSITE, processor);
-  });
-  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", String(t).c_str());
-  });
-  server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", String(h).c_str());
-  });
-  server.on("/motionDetection", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", motionDetection.c_str());
-  });
-  server.on("/rfid", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", rfidStatus.c_str());
-  });
-  
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/html", WEBSITE, processor); });
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/plain", String(t).c_str()); });
+  server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/plain", String(h).c_str()); });
+  server.on("/motionDetection", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/plain", motionDetection.c_str()); });
+  server.on("/keypad", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/plain", keypads.c_str()); });
+  server.on("/rfid", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/plain", rfidStatus.c_str()); });
 
   // Start server
   server.begin();
 }
- 
-void loop(){  
+
+void loop()
+{
   clientRequest();
 }
 
@@ -110,44 +116,56 @@ void handleProximityInput(String request)
 }
 void handleRFIDInput(String request)
 {
-    rfidStatus = getClientSubstring(request, "a");
+  rfidStatus = getClientSubstring(request, "a");
 }
 
-void clientRequest() { /* function clientRequest */
+void handleKeypadInput(String request)
+{
+  keypads = getClientSubstring(request, "k");
+}
+
+void clientRequest()
+{ /* function clientRequest */
   ////Check if client connected
   WiFiClient client = wifiServer.available();
   client.setTimeout(50);
-  if (client) {
-    if (client.connected()) {
-      //Print client IP address
+  if (client)
+  {
+    if (client.connected())
+    {
+      // Print client IP address
       /*Serial.print(" ->");
       Serial.println(client.remoteIP());*/
 
-      String request = client.readStringUntil('\r');  //receives the message from the client
+      String request = client.readStringUntil('\r'); // receives the message from the client
       Serial.print("Request: ");
       Serial.println(request);
 
       String clientName = getClientSubstring(request, "c");
-      if(clientName == tempHumNode)
+      if (clientName == tempHumNode)
       {
         handleTemperatureInput(request);
       }
-      else if(clientName == proximityName)
+      else if (clientName == proximityName)
       {
         handleProximityInput(request);
       }
-      else if(clientName == rfidNode)
+      else if (clientName == keypadName)
       {
-        handleRFIDInput(request);
-      }
-      else
-      {
-        Serial.println("ERROR: Could not identify client name " + clientName);
+        handleKeypadInput(request);
+        else if (clientName == rfidNode)
+        {
+          handleRFIDInput(request);
+        }
+        else
+        {
+          Serial.println("ERROR: Could not identify client name " + clientName);
+        }
       }
     }
   }
-}
 
-String getClientSubstring(String request, String identifier) {
-  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
-}
+  String getClientSubstring(String request, String identifier)
+  {
+    return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
+  }
