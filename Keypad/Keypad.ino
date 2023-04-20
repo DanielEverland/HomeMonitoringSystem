@@ -1,6 +1,3 @@
-
-
-
 /*
  * This ESP32 code is created by esp32io.com
  *
@@ -25,7 +22,7 @@ const char* passwordWiFi = "expeditious";
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 127, 85); 
+IPAddress server(192, 168, 127, 242); 
 // WIFI END
 
 char keys[ROW_NUM][COLUMN_NUM] = {
@@ -71,7 +68,6 @@ void loop() {
     } else if (key == 'D') {
       if (password == input_password) {
         Serial.println("The password is correct, ACCESS GRANTED!");
-        // DO YOUR WORK HERE
         requestHost("ACCESS GRANTED");
 
       } else {
@@ -91,7 +87,8 @@ void requestHost(String Message) { /* function requestMaster */
   if ((millis() - previousRequest) > UPDATE_TIME) {  // client connect to server every 500ms
     previousRequest = millis();
     if (host.connect(server, 81)) {  // Connection to the server
-      host.println(nom + ": k[" + Message + "]k \r");
+      host.println("c[" + nom + "]c" + ": k[" + Message + "]k \r");
+      Serial.println("hej");
     }
   }
 }
