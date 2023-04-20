@@ -18,7 +18,7 @@
 // WIFI
 #define UPDATE_TIME 1000
 
-String nom = "ProximityNode";
+String nom = "KeypadNode";
 const char* ssid = "Galaxy A53";
 const char* passwordWiFi = "expeditious";
 

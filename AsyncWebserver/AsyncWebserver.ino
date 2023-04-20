@@ -22,6 +22,7 @@ const char* password = "expeditious";
 float t = 0.0;
 float h = 0.0;
 String motionDetection = "";
+String keypads = "";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -40,6 +41,7 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
+const String keypadName = "keypadNode";
 
 // Replaces placeholder with DHT values
 String processor(const String& var){
@@ -83,7 +85,9 @@ void setup(){
   server.on("/motionDetection", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", motionDetection.c_str());
   });
-  
+    server.on("/keypad", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", motionDetection.c_str());
+  });
 
   // Start server
   server.begin();
@@ -102,6 +106,11 @@ void handleTemperatureInput(String request)
 void handleProximityInput(String request)
 {
   motionDetection = getClientSubstring(request, "m");
+}
+
+void handleKeypadInput(String request)
+{
+  keypads = getClientSubstring(request, "k");
 }
 
 void clientRequest() { /* function clientRequest */
@@ -126,6 +135,10 @@ void clientRequest() { /* function clientRequest */
       else if(clientName == proximityName)
       {
         handleProximityInput(request);
+      }
+      else if(clientName == keypadName);
+      {
+        handleKeypadInput(request);
       }
       else
       {
