@@ -20,6 +20,7 @@ float h = 0.0;
 float l = 0.0;
 String lightDetection = "";
 String motionDetection = "";
+String rfidStatus = "";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -37,6 +38,8 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumLightNode = "TemHumLightNode";
+const String tempHumNode = "TemperatureNode";
+const String rfidNode = "RFIDNode";
 
 // Function used to initialize values on website on initial load
 String processor(const String &var) {
@@ -84,6 +87,11 @@ void setup() {
   server.on("/lightDetection", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/plain", lightDetection.c_str());
   });
+  server.on("/rfid", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", rfidStatus.c_str());
+  });
+  
+
   // Start server
   server.begin();
 }
@@ -102,6 +110,10 @@ void handleTemperatureInput(String request) {
 
 void handleProximityInput(String request) {
   motionDetection = getClientSubstring(request, "m");
+}
+void handleRFIDInput(String request)
+{
+    rfidStatus = getClientSubstring(request, "a");
 }
 
 void clientRequest() {
@@ -123,7 +135,13 @@ void clientRequest() {
         handleTemperatureInput(request);
       } else if (clientName == proximityName) {
         handleProximityInput(request);
-      } else {
+      }
+      else if(clientName == rfidNode)
+      {
+        handleRFIDInput(request);
+      }
+      else
+      {
         Serial.println("ERROR: Could not identify client name " + clientName);
       }
     }
