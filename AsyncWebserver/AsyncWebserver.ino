@@ -15,8 +15,8 @@
 //String getClientSubstring();
 
 // Replace with your network credentials
-const char* ssid = "Galaxy A53";
-const char* password = "expeditious";
+const char* ssid = "OnePlus Nord";
+const char* password = "IoTIsKool";
 
 // current temperature & humidity, updated in loop()
 float t = 0.0;
