@@ -24,6 +24,68 @@ float t = 0.0;
 float h = 0.0;
 String motionDetection = "";
 
+
+const int output = 2;
+
+// HTML web page
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE HTML><html>
+  <head> //Underneath we see the background some of the background setup, and a bit of the button setup. 
+         //Most of this has to be integrated into the "pretty" website, as this is just a button and a white background
+   
+    <title>ESP Pushbutton Web Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: Arial; text-align: center; margin:0px auto; padding-top: 30px;}
+      .button {
+        padding: 10px 20px;
+        font-size: 24px;
+        text-align: center;
+        outline: none;
+        color: #fff;
+        background-color: #c9c9c9;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 6px #999;
+        cursor: pointer;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+      }  //Setting different button colors for active state
+      .button:hover {background-color: #c9c9c9}
+      .button:active {
+        background-color: #029ef7;
+        box-shadow: 0 4px #666;
+        transform: translateY(2px);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ESP Pushbutton Web Server</h1>
+    //Here we create the button swith on the website. 
+    //The onXXXX are event attributes, that specify what happens on the specific events. And the togglecheckbox simply states what state the LED is in at the given event.
+    <button class="button" onmousedown="toggleCheckbox('on');" ontouchstart="toggleCheckbox('on');" onmouseup="toggleCheckbox('off');" ontouchend="toggleCheckbox('on');">LED PUSHBUTTON</button>
+   <script>
+   //This function simply sends the commands from the above code to the webserver.
+   function toggleCheckbox(x) {
+     var xhr = new XMLHttpRequest();
+     xhr.open("GET", "/" + x, true);
+     xhr.send();
+   }
+  </script>
+  </body>
+</html>)rawliteral";
+
+void notFound(AsyncWebServerRequest *request) {
+  request->send(404, "text/plain", "Not found");
+}
+
+
+
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
