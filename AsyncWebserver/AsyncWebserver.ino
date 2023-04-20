@@ -11,8 +11,8 @@
 #include "Website.generated.h"
 
 // Network credentials
-const char *ssid = "Galaxy A53";
-const char *password = "expeditious";
+const char* ssid = "Galaxy A53";
+const char* password = "expeditious";
 
 // Initialize variables to hold data from nodes
 float t = 0.0;
