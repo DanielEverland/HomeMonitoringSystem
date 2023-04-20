@@ -33,6 +33,11 @@ unsigned long previousMillis = 0;    // will store last time DHT was updated
 // WiFi server for connecting clients
 WiFiServer wifiServer(81);
 WiFiClient browser;
+WiFiClient temperetureClient;
+WiFiClient proximityClient;
+WiFiClient rfidClient;
+//WiFiClient 
+//WiFiClient
 IPAddress ip(192, 168, 158, 20);
 IPAddress gateway(192, 168, 1, 254);
 IPAddress subnet(255, 255, 255, 0);
@@ -117,6 +122,11 @@ void handleProximityInput(String request)
   motionDetection = getClientSubstring(request, "m");
 }
 
+void handleRfidInput(String request)
+{
+  motionDetection = getClientSubstring(request, "c");
+}
+
 void clientRequest() { /* function clientRequest */
   ////Check if client connected
   WiFiClient client = wifiServer.available();
@@ -135,11 +145,25 @@ void clientRequest() { /* function clientRequest */
       if(clientName == tempHumNode)
       {
         handleTemperatureInput(request);
+        temperetureClient = client;
       }
       else if(clientName == proximityName)
       {
         handleProximityInput(request);
+        proximityClient = client;
       }
+      else if(clientName == rfidName)
+      {
+        handleRfidinput(request);
+        rfidClient == client;
+        rfidClient.println("fuckoff");
+      }
+/*
+      else if( clientName == keypadName){
+         clientName == client
+        rfidClient.println("fuckoff")
+      }*/
+
       else
       {
         Serial.println("ERROR: Could not identify client name " + clientName);
