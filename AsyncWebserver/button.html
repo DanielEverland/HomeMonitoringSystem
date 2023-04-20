@@ -1,0 +1,14 @@
+<title>ESP Pushbutton Web Server</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body>
+    <button class="button" onmousedown="toggleCheckbox('on');" ontouchstart="toggleCheckbox('on');" onmouseup="toggleCheckbox('off');" ontouchend="toggleCheckbox('on');">LED PUSHBUTTON</button>
+    <script>
+   //This function simply sends the commands from the above code to the webserver.
+   function toggleCheckbox(x) {
+     var xhr = new XMLHttpRequest();
+     xhr.open("GET", "/" + x, true);
+     xhr.send();
+   }
+    </script>
+</body>

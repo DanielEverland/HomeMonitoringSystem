@@ -20,24 +20,33 @@
   </style>
 </head>
 <body>
-  <h2>ESP8266 DHT Server</h2>
-  <p>
-    <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
-    <span class="dht-labels">Temperature</span> 
-    <span id="temperature">%TEMPERATURE%</span>
-    <sup class="units">&deg;C</sup>
-  </p>
-  <p>
-    <i class="fas fa-tint" style="color:#00add6;"></i> 
-    <span class="dht-labels">Humidity</span>
-    <span id="humidity">%HUMIDITY%</span>
-    <sup class="units">%</sup>
-  </p>
-  <p>
-    <i class="fas fa-exclamation"></i>
-    <span class="dht-labels">Motion</span>
-    <span id="motionDetection">%Motion%</span>
-  </p>
+    <h2>ESP8266 DHT Server</h2>
+    <p>
+        <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+        <span class="dht-labels">Temperature</span>
+        <span id="temperature">%TEMPERATURE%</span>
+        <sup class="units">&deg;C</sup>
+    </p>
+    <p>
+        <i class="fas fa-tint" style="color:#00add6;"></i>
+        <span class="dht-labels">Humidity</span>
+        <span id="humidity">%HUMIDITY%</span>
+        <sup class="units">%</sup>
+    </p>
+    <p>
+        <i class="fas fa-exclamation"></i>
+        <span class="dht-labels">Motion</span>
+        <span id="motionDetection">%Motion%</span>
+    </p>
+    <p>
+        <button class="button"
+                onmousedown="toggleCheckbox('on');"
+                ontouchstart="toggleCheckbox('on');"
+                onmouseup="toggleCheckbox('off');"
+                ontouchend="toggleCheckbox('off');">
+            <span>LED PUSHBUTTON</span>
+        </button>
+    </p>
 </body>
 <script>
 setInterval(function ( ) {
