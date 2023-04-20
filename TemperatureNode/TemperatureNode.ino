@@ -27,7 +27,6 @@ float f;
 
 const int pResistor = A0;
 int lightValue;
-String lightDetected;
 
 void setup() {
   pinMode(pResistor, INPUT);
@@ -60,7 +59,7 @@ void loop() {
 void requestHost() {
   if (host.connect(server, 81)) {
     // Remove light value if unused
-    host.println("c[" + nom + "]c" + ": Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h Current light level is: l[" + lightValue + "]l Light detected: ld[ " + lightDetected + " ]ld \r");
+    host.println("c[" + nom + "]c" + ": Current temperature is t[" + t + "]t Current humidity is h[" + h + "]h Current light level is: l[" + lightValue + "]l \r");
   }
 }
 
@@ -82,11 +81,6 @@ void dhtSensorLoop() {
 
 void lightSensorLoop() {
   lightValue = analogRead(pResistor);
-  if (lightValue > 100) {
-    lightDetected = "Light detected";
-  } else {
-    lightDetected = "No light detected";
-  }
   Serial.print(lightValue);
   Serial.print(" | ");
   Serial.println(lightDetected);
