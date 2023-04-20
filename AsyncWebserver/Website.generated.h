@@ -45,7 +45,12 @@ padding-bottom: 15px;
 <p>
 <i class="fas fa-exclamation"></i>
 <span class="dht-labels">Motion</span>
-<span id="motionDetection">%Motion%</span>
+<span id="motionDetection">%MOTION%</span>
+</p>
+<p>
+<i class="fas fa-sun"></i>
+<span class="dht-labels">Light</span>
+<span id="lightDetection">%LIGHT%</span>
 </p>
 <p>
 <i class="fas fa-key"></i>
@@ -87,6 +92,16 @@ document.getElementById("motionDetection").innerHTML = this.responseText;
 }
 };
 xhttp.open("GET", "/motionDetection", true);
+xhttp.send();
+}, 1000);
+setInterval(function () {
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function () {
+if (this.readyState == 4 && this.status == 200) {
+document.getElementById("lightDetection").innerHTML = this.responseText;
+}
+};
+xhttp.open("GET", "/lightDetection", true);
 xhttp.send();
 }, 1000);
 setInterval(function () {
