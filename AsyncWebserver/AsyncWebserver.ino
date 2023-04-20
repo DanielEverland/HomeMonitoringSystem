@@ -11,8 +11,8 @@
 #include "Website.generated.h"
 
 // Network credentials
-const char* ssid = "Galaxy A53";
-const char* password = "expeditious";
+const char *ssid = "Galaxy A53";
+const char *password = "expeditious";
 
 // Initialize variables to hold data from nodes
 float t = 0.0;
@@ -41,6 +41,9 @@ const String tempHumLightNode = "TemHumLightNode";
 const String tempHumNode = "TemperatureNode";
 const String keypadName = "KeypadNode";
 const String rfidNode = "RFIDNode";
+
+WiFiClient keypadClient;
+WiFiClient rfidClient;
 
 // Function used to initialize values on website on initial load
 String processor(const String &var) {
@@ -143,8 +146,15 @@ void clientRequest() {
       } else if (clientName == proximityName) {
         handleProximityInput(request);
       } else if (clientName == keypadName) {
+        if (keypadClient == NULL) {
+          keypadClient = client;
+        }
+        rfidClient.println("hej fra keypad");
         handleKeypadInput(request);
       } else if (clientName == rfidNode) {
+        if (rfidClient == NULL) {
+          rfidClient = client;
+        }
         handleRFIDInput(request);
       } else {
         Serial.println("ERROR: Could not identify client name " + clientName);

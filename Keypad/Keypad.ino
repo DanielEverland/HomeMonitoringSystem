@@ -54,6 +54,7 @@ void setup() {
   Serial.print(F(" connected to Wifi! IP address : "));
   Serial.println(WiFi.localIP());  // Print the IP address
   // WIFI END
+  
 }
 
 void loop() {
