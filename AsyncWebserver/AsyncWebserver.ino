@@ -45,6 +45,7 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
+const String rfidName = "RfidNode";
 
 // Replaces placeholder with DHT values
 String processor(const String& var){
@@ -154,7 +155,7 @@ void clientRequest() { /* function clientRequest */
       }
       else if(clientName == rfidName)
       {
-        handleRfidinput(request);
+        handleRfidInput(request);
         rfidClient == client;
         rfidClient.println("fuckoff");
       }
