@@ -39,6 +39,11 @@ padding-bottom: 15px;
 <span class="dht-labels">Motion</span>
 <span id="motionDetection">%Motion%</span>
 </p>
+<p>
+<i class="fas fa-key"></i> 
+<span class="dht-labels">Status RFID</span>
+<span id="rfid">%RFID Status%</span>    
+</p>
 </body>
 <script>
 setInterval(function ( ) {
@@ -71,6 +76,16 @@ document.getElementById("motionDetection").innerHTML = this.responseText;
 xhttp.open("GET", "/motionDetection", true);
 xhttp.send();
 }, 1000);
+setInterval(function ( ) {
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+if (this.readyState == 4 && this.status == 200) {
+document.getElementById("rfid").innerHTML = this.responseText;
+}
+};
+xhttp.open("GET", "/rfid", true);
+xhttp.send();
+}, 1000 ) ;
 </script>
 </html>
 )rawliteral";

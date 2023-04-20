@@ -22,6 +22,7 @@ const char* password = "expeditious";
 float t = 0.0;
 float h = 0.0;
 String motionDetection = "";
+String rfidStatus = "";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -40,6 +41,7 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
+const String rfidNode = "RFIDNode";
 
 // Replaces placeholder with DHT values
 String processor(const String& var){
@@ -83,6 +85,9 @@ void setup(){
   server.on("/motionDetection", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", motionDetection.c_str());
   });
+  server.on("/rfid", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", rfidStatus.c_str());
+  });
   
 
   // Start server
@@ -102,6 +107,10 @@ void handleTemperatureInput(String request)
 void handleProximityInput(String request)
 {
   motionDetection = getClientSubstring(request, "m");
+}
+void handleRFIDInput(String request)
+{
+    rfidStatus = getClientSubstring(request, "a");
 }
 
 void clientRequest() { /* function clientRequest */
@@ -126,6 +135,10 @@ void clientRequest() { /* function clientRequest */
       else if(clientName == proximityName)
       {
         handleProximityInput(request);
+      }
+      else if(clientName == rfidNode)
+      {
+        handleRFIDInput(request);
       }
       else
       {
