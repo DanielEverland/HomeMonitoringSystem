@@ -22,7 +22,7 @@ const char* passwordWiFi = "expeditious";
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 127, 85); 
+IPAddress server(192, 168, 127, 242); 
 // WIFI END
 
 char keys[ROW_NUM][COLUMN_NUM] = {
