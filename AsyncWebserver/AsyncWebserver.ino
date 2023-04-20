@@ -35,6 +35,8 @@ unsigned long previousMillis = 0; // will store last time DHT was updated
 // WiFi server for connecting clients
 WiFiServer wifiServer(81);
 WiFiClient browser;
+WiFiClient proxClient;
+WiFiClient keypadClient;
 IPAddress ip(192, 168, 158, 20);
 IPAddress gateway(192, 168, 1, 254);
 IPAddress subnet(255, 255, 255, 0);
@@ -42,9 +44,7 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
-
 const String keypadName = "KeypadNode";
-
 const String rfidNode = "RFIDNode";
 
 // Replaces placeholder with DHT values
@@ -153,14 +153,18 @@ void clientRequest()
       else if (clientName == keypadName)
       {
         handleKeypadInput(request);
-        else if (clientName == rfidNode)
-        {
-          handleRFIDInput(request);
-        }
-        else
-        {
-          Serial.println("ERROR: Could not identify client name " + clientName);
-        }
+        keypadClient = client;
+        keypadClient.println("Hej");
+      else if (clientName == rfidNode)
+      {
+        handleRFIDInput(request);
+        keypadClient = client;
+        
+      }
+      else
+      {
+        Serial.println("ERROR: Could not identify client name " + clientName);
+      }
       }
     }
   }
