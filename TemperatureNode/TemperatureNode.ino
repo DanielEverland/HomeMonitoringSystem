@@ -82,6 +82,4 @@ void dhtSensorLoop() {
 void lightSensorLoop() {
   lightValue = analogRead(pResistor);
   Serial.print(lightValue);
-  Serial.print(" | ");
-  Serial.println(lightDetected);
 }
