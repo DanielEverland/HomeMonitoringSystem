@@ -56,6 +56,7 @@ String processor(const String& var){
 void setup(){
   // Serial port for debugging purposes
   Serial.begin(115200);
+  pinMode(LED_BUILTIN, OUTPUT);
   
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -82,6 +83,18 @@ void setup(){
   });
   server.on("/motionDetection", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", motionDetection.c_str());
+  });
+
+   // Receive an HTTP GET request
+  server.on("/on", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    request->send(200, "text/plain", "ok");
+  });
+
+  // Receive an HTTP GET request
+  server.on("/off", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    digitalWrite(LED_BUILTIN, LOW);
+    request->send(200, "text/plain", "ok");
   });
   
 
