@@ -18,7 +18,6 @@ const char* password = "expeditious";
 float t = 0.0;
 float h = 0.0;
 float l = 0.0;
-String lightDetection = "";
 String motionDetection = "";
 String keypads = "";
 String rfidStatus = "";
@@ -52,13 +51,12 @@ String processor(const String &var) {
   } else if (var == "MOTION") {
     return motionDetection;
   } else if (var == "LIGHT") {
-    return lightDetection;
+    return String(l);
   }
   return String();
 }
 
-void setup()
-{
+void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
 
@@ -67,15 +65,14 @@ void setup()
   WiFi.begin(ssid, password);
 
   Serial.println("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.print(".");
   }
   Serial.println("Connection established");
   wifiServer.begin();
-  
-// Print ESP8266 Local IP Address
+
+  // Print ESP8266 Local IP Address
   Serial.println(WiFi.localIP());
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -92,54 +89,46 @@ void setup()
     request->send_P(200, "text/plain", motionDetection.c_str());
   });
   server.on("/lightDetection", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send_P(200, "text/plain", lightDetection.c_str());
+    request->send_P(200, "text/plain", String(l).c_str());
   });
-  server.on("/rfid", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/rfid", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/plain", rfidStatus.c_str());
   });
-    server.on("/keypad", HTTP_GET, [](AsyncWebServerRequest *request){ 
-      request->send_P(200, "text/plain", keypads.c_str());
+  server.on("/keypad", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/plain", keypads.c_str());
   });
 
   // Start server
   server.begin();
 }
 
-void loop()
-{
+void loop() {
   clientRequest();
 }
 
 void handleTemperatureInput(String request) {
   t = strtof(getClientSubstring(request, "t").c_str(), nullptr);
   h = strtof(getClientSubstring(request, "h").c_str(), nullptr);
-  // Remove light value if unused
   l = strtof(getClientSubstring(request, "l").c_str(), nullptr);
-  lightDetection = getClientSubstring(request, "ld");
 }
 
 void handleProximityInput(String request) {
   motionDetection = getClientSubstring(request, "m");
 }
-void handleRFIDInput(String request)
-{
+void handleRFIDInput(String request) {
   rfidStatus = getClientSubstring(request, "a");
 }
 
-void handleKeypadInput(String request)
-{
+void handleKeypadInput(String request) {
   keypads = getClientSubstring(request, "k");
 }
 
-void clientRequest()
-{
+void clientRequest() {
   //Check if client connected
   WiFiClient client = wifiServer.available();
   client.setTimeout(50);
-  if (client)
-  {
-    if (client.connected())
-    {
+  if (client) {
+    if (client.connected()) {
       // Print client IP address
       /*Serial.print(" ->");
       Serial.println(client.remoteIP());*/
@@ -153,24 +142,17 @@ void clientRequest()
         handleTemperatureInput(request);
       } else if (clientName == proximityName) {
         handleProximityInput(request);
-      }
-      else if (clientName == keypadName)
-      {
+      } else if (clientName == keypadName) {
         handleKeypadInput(request);
-        else if (clientName == rfidNode)
-        {
-          handleRFIDInput(request);
-        }
-        else
-        {
-          Serial.println("ERROR: Could not identify client name " + clientName);
-        }
+      } else if (clientName == rfidNode) {
+        handleRFIDInput(request);
+      } else {
+        Serial.println("ERROR: Could not identify client name " + clientName);
       }
     }
   }
 }
 
-  String getClientSubstring(String request, String identifier)
-  {
-    return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
-  }
+String getClientSubstring(String request, String identifier) {
+  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
+}
