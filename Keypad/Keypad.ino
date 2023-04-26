@@ -1,6 +1,3 @@
-
-
-
 /*
  * This ESP32 code is created by esp32io.com
  *
@@ -10,9 +7,23 @@
  */
 
 #include <Keypad.h>
+#include <ESP8266WiFi.h> 
 
 #define ROW_NUM     4 // four rows
 #define COLUMN_NUM  4 // three columns
+
+// WIFI
+#define UPDATE_TIME 1000
+
+String nom = "KeypadNode";
+const char* ssid = "Galaxy A53";
+const char* passwordWiFi = "expeditious";
+
+unsigned long previousRequest = 0;
+//Objects
+WiFiClient host;
+IPAddress server(192, 168, 127, 242); 
+// WIFI END
 
 char keys[ROW_NUM][COLUMN_NUM] = {
   {'1', '2', '3', 'A'},
@@ -32,6 +43,17 @@ String input_password;
 void setup() {
   Serial.begin(9600);
   input_password.reserve(32); // maximum input characters is 33, change if needed
+
+     // WIFI SETIP
+   WiFi.begin(ssid, passwordWiFi);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(F("."));
+  }
+  Serial.print(nom);
+  Serial.print(F(" connected to Wifi! IP address : "));
+  Serial.println(WiFi.localIP());  // Print the IP address
+  // WIFI END
 }
 
 void loop() {
@@ -46,15 +68,27 @@ void loop() {
     } else if (key == 'D') {
       if (password == input_password) {
         Serial.println("The password is correct, ACCESS GRANTED!");
-        // DO YOUR WORK HERE
+        requestHost("ACCESS GRANTED");
 
       } else {
         Serial.println("The password is incorrect, ACCESS DENIED!");
+        requestHost("ACCESS DENIED");
       }
 
       input_password = ""; // clear input password
     } else {
       input_password += key; // append new character to input password string
+    }
+  }
+}
+
+void requestHost(String Message) { /* function requestMaster */
+  ////Request to host
+  if ((millis() - previousRequest) > UPDATE_TIME) {  // client connect to server every 500ms
+    previousRequest = millis();
+    if (host.connect(server, 81)) {  // Connection to the server
+      host.println("c[" + nom + "]c" + ": k[" + Message + "]k \r");
+      Serial.println("hej");
     }
   }
 }
