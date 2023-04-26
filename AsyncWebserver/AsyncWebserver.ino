@@ -45,7 +45,7 @@ IPAddress subnet(255, 255, 255, 0);
 // Names of nodes
 const String proximityName = "ProximityNode";
 const String tempHumNode = "TemperatureNode";
-const String rfidName = "RfidNode";
+const String rfidName = "RFIDNode";
 
 // Replaces placeholder with DHT values
 String processor(const String& var){
@@ -94,12 +94,7 @@ void setup(){
    // Receive an HTTP GET request
   server.on("/on", HTTP_GET, [] (AsyncWebServerRequest *request) {
     digitalWrite(LED_BUILTIN, HIGH);
-    request->send(200, "text/plain", "ok");
-  });
-
-  // Receive an HTTP GET request
-  server.on("/off", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    digitalWrite(LED_BUILTIN, LOW);
+    rfidClient.println("c[Server]c: r[Open]r");
     request->send(200, "text/plain", "ok");
   });
   
@@ -156,8 +151,7 @@ void clientRequest() { /* function clientRequest */
       else if(clientName == rfidName)
       {
         handleRfidInput(request);
-        rfidClient == client;
-        rfidClient.println("fuckoff");
+        rfidClient = client;
       }
 /*
       else if( clientName == keypadName){

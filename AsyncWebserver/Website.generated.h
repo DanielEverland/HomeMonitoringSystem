@@ -1,5 +1,6 @@
 const char WEBSITE[] = R"rawliteral(
-<DOCTYPE HTML><html>
+<DOCTYPE HTML>
+<html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -23,13 +24,13 @@ padding-bottom: 15px;
 <body>
 <h2>ESP8266 DHT Server</h2>
 <p>
-<i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
-<span class="dht-labels">Temperature</span> 
+<i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
+<span class="dht-labels">Temperature</span>
 <span id="temperature">%TEMPERATURE%</span>
 <sup class="units">&deg;C</sup>
 </p>
 <p>
-<i class="fas fa-tint" style="color:#00add6;"></i> 
+<i class="fas fa-tint" style="color:#00add6;"></i>
 <span class="dht-labels">Humidity</span>
 <span id="humidity">%HUMIDITY%</span>
 <sup class="units">%</sup>
@@ -38,6 +39,13 @@ padding-bottom: 15px;
 <i class="fas fa-exclamation"></i>
 <span class="dht-labels">Motion</span>
 <span id="motionDetection">%Motion%</span>
+</p>
+<p>
+<button class="button"
+onmousedown="toggleCheckbox('on');"
+ontouchstart="toggleCheckbox('on');">
+<span>LED PUSHBUTTON</span>
+</button>
 </p>
 </body>
 <script>
@@ -71,6 +79,11 @@ document.getElementById("motionDetection").innerHTML = this.responseText;
 xhttp.open("GET", "/motionDetection", true);
 xhttp.send();
 }, 1000);
+function toggleCheckbox(x) {
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "/" + x, true);
+xhr.send();
+}
 </script>
 </html>
 )rawliteral";
