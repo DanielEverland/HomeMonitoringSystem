@@ -14,6 +14,16 @@ int v = 0;
 bool access = false;
 Servo servo;
 
+//Servo servo;
+String nom = "RFIDNode";
+const char* ssid = "Galaxy A53";
+const char* password = "expeditious";
+//Variables
+unsigned long previousRequest = 0;
+//Objects
+WiFiClient host;
+IPAddress server(192, 168, 127, 85);
+
 void setup() {
   Serial.begin(115200);   // Initialize serial communication
   SPI.begin();          // Initialize SPI bus
@@ -23,8 +33,7 @@ void setup() {
 
 void loop()
 {
-   //servo.write(0);  
-   
+  getHostMessage();
   
   if ( ! mfrc522.PICC_IsNewCardPresent()) // new cards
   {
@@ -86,6 +95,41 @@ void loop()
   }
   
   delay(700);
-  Serial.println();
- 
+  Serial.println(); 
+
+}
+
+
+void requestHost(String msg) 
+{ /* function requestMaster */
+  ////Request to host
+  if ((millis() - previousRequest) > UPDATE_TIME) 
+  {  // client connect to server every 500ms
+    previousRequest = millis();
+    if (host.connect(server, 81)) 
+    {  // Connection to the server
+      host.println("c["+ nom +"]c" + ":  a[" + msg + "]a \r");
+    }
+  }
+}
+
+void getHostMessage() {
+    if (host.connected()) {
+    String hostMsg = host.readString();
+    if (!hostMsg.isEmpty()) {
+      Serial.println(hostMsg);
+      String hostSubstring = getSubstring(hostMsg, "r");
+      if (hostSubstring == "Open") {
+        openServo();
+      }
+    }
+  }
+}
+
+String getSubstring(String request, String identifier) {
+  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
+}
+
+void openServo() {
+  Serial.println("Servo open");
 }
