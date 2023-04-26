@@ -16,13 +16,15 @@
 #define UPDATE_TIME 1000
 
 String nom = "KeypadNode";
-const char* ssid = "Galaxy A53";
-const char* passwordWiFi = "expeditious";
+const char* ssid = "WiFimodem-9538";
+const char* passwordWiFi = "gz2gtywyzn";
+//const char* ssid = "Galaxy A53";
+//const char* passwordWiFi = "expeditious";
 
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 127, 242); 
+IPAddress server(192, 168, 0, 204); 
 // WIFI END
 
 char keys[ROW_NUM][COLUMN_NUM] = {
@@ -58,6 +60,11 @@ void setup() {
 }
 
 void loop() {
+  handleKeypad();
+  getHostMessage();
+}
+
+void handleKeypad(){
   char key = keypad.getKey();
 
   if (key) {
@@ -89,7 +96,24 @@ void requestHost(String Message) { /* function requestMaster */
     previousRequest = millis();
     if (host.connect(server, 81)) {  // Connection to the server
       host.println("c[" + nom + "]c" + ": k[" + Message + "]k \r");
-      Serial.println("hej");
     }
   }
+}
+
+void getHostMessage() {
+  host.setTimeout(200);
+  if (host.connected()) {
+  String hostMsg = host.readString();
+  if (!hostMsg.isEmpty()) {
+    Serial.println(hostMsg);
+//      String hostSubstring = getSubstring(hostMsg, "h");
+//      if (hostSubstring == "Open") {
+//        Serial.println("Wuhuuu");
+//      }
+    }
+  }
+}
+
+String getSubstring(String request, String identifier) {
+  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
 }

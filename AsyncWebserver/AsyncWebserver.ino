@@ -11,8 +11,10 @@
 #include "Website.generated.h"
 
 // Network credentials
-const char *ssid = "Galaxy A53";
-const char *password = "expeditious";
+const char *ssid = "WiFimodem-9538";
+const char *password = "gz2gtywyzn";
+//const char *ssid = "Galaxy A53";
+//const char *password = "expeditious";
 
 // Initialize variables to hold data from nodes
 float t = 0.0;
@@ -31,7 +33,7 @@ WiFiServer wifiServer(81);
 // Define static IP, gateway and subnet for better consistency
 
 // TODO: Check if this breaks client communication
-IPAddress ip(192, 168, 127, 85);
+IPAddress ip(192, 168, 1, 85);
 IPAddress gateway(192, 168, 127, 254);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -118,12 +120,33 @@ void handleTemperatureInput(String request) {
 void handleProximityInput(String request) {
   motionDetection = getClientSubstring(request, "m");
 }
+
 void handleRFIDInput(String request) {
   rfidStatus = getClientSubstring(request, "a");
+  if(rfidStatus == "Access Martin")
+  {
+     rfidClient.println("Access Magnus"); 
+  }
+  else if(rfidStatus == "Access Magnus")
+  {
+      rfidClient.println("Access Magnus");
+  }
+  else
+  {
+      rfidClient.println("Access NO");
+  }
 }
 
 void handleKeypadInput(String request) {
   keypads = getClientSubstring(request, "k");
+  if(keypads == "ACCESS GRANTED")
+    {
+        keypadClient.println("Access OK");
+    }
+     else
+    {
+        keypadClient.println("Access NO");
+    }
 }
 
 void clientRequest() {
@@ -141,22 +164,27 @@ void clientRequest() {
       Serial.println(request);
 
       String clientName = getClientSubstring(request, "c");
-      if (clientName == tempHumLightNode) {
+      
+      if (clientName == tempHumLightNode) 
+      {
         handleTemperatureInput(request);
-      } else if (clientName == proximityName) {
+      } 
+      else if (clientName == proximityName) 
+      {
         handleProximityInput(request);
-      } else if (clientName == keypadName) {
-        if (keypadClient == NULL) {
-          keypadClient = client;
-        }
-        rfidClient.println("hej fra keypad");
+      } 
+      else if (clientName == keypadName) 
+      {
+        keypadClient = client;
         handleKeypadInput(request);
-      } else if (clientName == rfidNode) {
-        if (rfidClient == NULL) {
-          rfidClient = client;
-        }
+      } 
+      else if (clientName == rfidNode) 
+      {
+        rfidClient = client;
         handleRFIDInput(request);
-      } else {
+      } 
+      else 
+      {
         Serial.println("ERROR: Could not identify client name " + clientName);
       }
     }
