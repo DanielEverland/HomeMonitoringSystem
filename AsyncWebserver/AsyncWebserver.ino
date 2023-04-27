@@ -32,6 +32,7 @@ WiFiServer wifiServer(81);
 WiFiClient browser;
 WiFiClient temperetureClient;
 WiFiClient proximityClient;
+WiFiClient keypadClient;
 WiFiClient rfidClient;
 
 IPAddress ip(192, 168, 66, 85);
@@ -45,8 +46,6 @@ const String tempHumNode = "TemperatureNode";
 const String keypadName = "KeypadNode";
 const String rfidName = "RFIDNode";
 
-WiFiClient keypadClient;
-WiFiClient rfidClient;
 
 // Function used to initialize values on website on initial load
 String processor(const String &var)
