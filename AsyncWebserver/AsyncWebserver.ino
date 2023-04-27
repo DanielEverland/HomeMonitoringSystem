@@ -11,10 +11,10 @@
 #include "Website.generated.h"
 
 // Network credentials
-const char *ssid = "WiFimodem-9538";
-const char *password = "gz2gtywyzn";
-//const char *ssid = "Galaxy A53";
-//const char *password = "expeditious";
+//const char *ssid = "WiFimodem-9538";
+//const char *password = "gz2gtywyzn";
+const char *ssid = "Galaxy A53";
+const char *password = "expeditious";
 
 // Initialize variables to hold data from nodes
 float t = 0.0;
@@ -33,8 +33,8 @@ WiFiServer wifiServer(81);
 // Define static IP, gateway and subnet for better consistency
 
 // TODO: Check if this breaks client communication
-IPAddress ip(192, 168, 1, 85);
-IPAddress gateway(192, 168, 127, 254);
+IPAddress ip(192, 168, 66, 85);
+IPAddress gateway(192, 168, 66, 254);
 IPAddress subnet(255, 255, 255, 0);
 
 // Names of nodes
@@ -125,15 +125,15 @@ void handleRFIDInput(String request) {
   rfidStatus = getClientSubstring(request, "a");
   if(rfidStatus == "Access Martin")
   {
-     rfidClient.println("Access Magnus"); 
+     rfidClient.println("r[Access Martin]r"); 
   }
   else if(rfidStatus == "Access Magnus")
   {
-      rfidClient.println("Access Magnus");
+     rfidClient.println("r[Access Magnus]r");
   }
   else
   {
-      rfidClient.println("Access NO");
+     rfidClient.println("r[Access NO]r");
   }
 }
 
@@ -141,11 +141,11 @@ void handleKeypadInput(String request) {
   keypads = getClientSubstring(request, "k");
   if(keypads == "ACCESS GRANTED")
     {
-        keypadClient.println("Access OK");
+        rfidClient.println("r[Access OK]r");
     }
      else
     {
-        keypadClient.println("Access NO");
+        rfidClient.println("r[Access NO]r");
     }
 }
 
@@ -156,8 +156,6 @@ void clientRequest() {
   if (client) {
     if (client.connected()) {
       // Print client IP address
-      /*Serial.print(" ->");
-      Serial.println(client.remoteIP());*/
 
       String request = client.readStringUntil('\r');  //receives the message from the client, use '\r' as String terminator
       Serial.print("Request: ");

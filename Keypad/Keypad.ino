@@ -16,15 +16,15 @@
 #define UPDATE_TIME 1000
 
 String nom = "KeypadNode";
-const char* ssid = "WiFimodem-9538";
-const char* passwordWiFi = "gz2gtywyzn";
-//const char* ssid = "Galaxy A53";
-//const char* passwordWiFi = "expeditious";
+//const char* ssid = "WiFimodem-9538";
+//const char* passwordWiFi = "gz2gtywyzn";
+const char* ssid = "Galaxy A53";
+const char* passwordWiFi = "expeditious";
 
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 0, 204); 
+IPAddress server(192, 168, 66, 85); 
 // WIFI END
 
 char keys[ROW_NUM][COLUMN_NUM] = {
@@ -95,7 +95,7 @@ void requestHost(String Message) { /* function requestMaster */
   if ((millis() - previousRequest) > UPDATE_TIME) {  // client connect to server every 500ms
     previousRequest = millis();
     if (host.connect(server, 81)) {  // Connection to the server
-      host.println("c[" + nom + "]c" + ": k[" + Message + "]k \r");
+      host.println(": d[" + Message + "]d \r");
     }
   }
 }
