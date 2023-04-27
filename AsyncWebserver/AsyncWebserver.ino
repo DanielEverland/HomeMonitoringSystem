@@ -11,8 +11,8 @@
 #include "Website.generated.h"
 
 // Network credentials
-const char* ssid = "Galaxy A53";
-const char* password = "expeditious";
+const char *ssid = "Galaxy A53";
+const char *password = "expeditious";
 
 // Initialize variables to hold data from nodes
 float t = 0.0;
@@ -31,10 +31,10 @@ WiFiClient browser;
 WiFiClient temperetureClient;
 WiFiClient proximityClient;
 WiFiClient rfidClient;
-//WiFiClient 
 //WiFiClient
-IPAddress ip(192, 168, 127, 85);
-IPAddress gateway(192, 168, 127, 254);
+//WiFiClient
+IPAddress ip(192, 168, 66, 85);
+IPAddress gateway(192, 168, 66, 254);
 IPAddress subnet(255, 255, 255, 0);
 
 // Names of nodes
@@ -98,12 +98,12 @@ void setup() {
   server.on("/keypad", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/plain", keypads.c_str());
   });
-  server.on("/on", HTTP_GET, [] (AsyncWebServerRequest *request) {
+  server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request) {
     // /on is called when lock is called to open
     rfidClient.println("c[Server]c: r[Open]r");
     request->send(200, "text/plain", "ok");
   });
-  
+
 
   // Start server
   server.begin();
@@ -127,8 +127,7 @@ void handleRFIDInput(String request) {
   rfidStatus = getClientSubstring(request, "a");
 }
 
-void handleRfidInput(String request)
-{
+void handleRfidInput(String request) {
   motionDetection = getClientSubstring(request, "c");
 }
 
@@ -154,21 +153,15 @@ void clientRequest() {
       if (clientName == tempHumLightNode) {
         handleTemperatureInput(request);
         temperetureClient = client;
-      }
-      else if(clientName == proximityName)
-      {
+      } else if (clientName == proximityName) {
         handleProximityInput(request);
         proximityClient = client;
-      }
-      else if(clientName == rfidName)
-      {
+      } else if (clientName == rfidName) {
         handleRfidInput(request);
         rfidClient = client;
-      }
       } else if (clientName == keypadName) {
         handleKeypadInput(request);
-      else
-      {
+      } else {
         Serial.println("ERROR: Could not identify client name " + clientName);
       }
     }
