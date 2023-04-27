@@ -117,7 +117,8 @@ const char* password = "expeditious";
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 127, 242);
+IPAddress server(192, 168, 127, 85);
+String accessString = "";
 
 // Start wars sound from - https://github.com/hibit-dev/buzzer/tree/master/src/movies/star_wars
 int Smelody[] = 
@@ -344,24 +345,9 @@ void playStarWars()
   }
 }
 
-
-
-
-void loop()
+void checkRFID()
 {
- 
-  if ( ! mfrc522.PICC_IsNewCardPresent()) // new cards
-  {
-    return;
-  }
-
-  
-  if ( ! mfrc522.PICC_ReadCardSerial()) // choose one of the cards
-  {
-    return;
-  }
-
-  // Print CARD ID on serial monitor
+   // Print CARD ID on serial monitor
   Serial.print("CARD ID :");
   String value= "";  
   for (byte i = 0; i < mfrc522.uid.size; i++) 
@@ -378,7 +364,8 @@ void loop()
   bool authorized = false;
   for (int i = 0; i < sizeof(IDs) / sizeof(IDs[0]); i++) 
   {
-    if (value.substring(0) == IDs[i]) {
+    if (value.substring(0) == IDs[i]) 
+    {
       authorized = true;
       break;
     }
@@ -389,22 +376,14 @@ void loop()
     Serial.println("Authorized access");    
     if(value.substring(0) == IDs[0])
     {
-     Serial.println("Access: Martin");
-     requestHost("Access: Martin");
-    
-     servo.write(180);
-     delay(2000);
-     servo.write(0); 
-
-     delay(100);
-     playStarWars();
-     //Pirates
-        
+     Serial.println("Access Martin");
+     requestHost("Access Martin");  
+            
     }
     if(value.substring(0) == IDs[2])
     {
-     Serial.println("Access: Magnus");
-     requestHost("Access: Magnus");
+     Serial.println("Access Magnus");
+     requestHost("Access Magnus");
      Pirates();
     }
     
@@ -415,10 +394,76 @@ void loop()
     requestHost("Access denied");
     
   }
-  
-  delay(700);
-  Serial.println(); 
+}
+
+void runServo()
+{
+   servo.write(180);
+   delay(2000);
+   servo.write(0); 
+}
+
+void playError() {
+  tone(buzzer, NOTE_G4);
+  delay(250);
+  tone(buzzer, NOTE_C4);
+  delay(500);
+  noTone(buzzer);
+}
+
+
+void loop()
+{
  
+  if ( ! mfrc522.PICC_IsNewCardPresent()) // new cards
+  {
+    return;
+  }  
+  if ( ! mfrc522.PICC_ReadCardSerial()) // choose one of the cards
+  {
+    return;
+  }
+
+  checkRFID();
+  delay(1000);
+
+
+  host.setTimeout(200);
+  if(host.connected())
+  {
+    accessString = host.readString();
+    Serial.println(accessString);
+  }
+  
+
+  if(accessString == "Access Martin")//RFID MARTIN
+  {
+    Serial.println(accessString);
+    runServo();
+    delay(300);
+    playStarWars();
+  }
+  else if(accessString == "Access Magnus")//RFID MAGNUS
+  {
+    Serial.println(accessString);
+    runServo();
+    delay(300);
+    Pirates();
+  }
+  else if(accessString == "Access OK")//Keypad
+  {
+    
+    runServo();
+    delay(300);
+    playStarWars();
+  }
+  else
+  {
+    Serial.println(accessString); //NO ACCESS   
+    delay(300);
+    //PLAY ERROR SOUND!
+    playError();
+  }  
 }
 
 
