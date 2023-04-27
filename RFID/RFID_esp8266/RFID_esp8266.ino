@@ -10,7 +10,7 @@
 #define UPDATE_TIME 1000
 #define BUZZER_PIN 16 //D0 - GPIO16
 
-//NOTE for Buzzer - 
+//NOTE for Buzzer -
 #define NOTE_B0  31
 #define NOTE_C1  33
 #define NOTE_CS1 35
@@ -117,10 +117,10 @@ const char* password = "expeditious";
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 127, 242);
+IPAddress server(192, 168, 66, 85);
 
 // Start wars sound from - https://github.com/hibit-dev/buzzer/tree/master/src/movies/star_wars
-int Smelody[] = 
+int Smelody[] =
 {
   NOTE_AS4, NOTE_AS4, NOTE_AS4,
   NOTE_F5, NOTE_C6,
@@ -143,7 +143,7 @@ int Smelody[] =
   NOTE_C6
 };
 
-int Sdurations[] = 
+int Sdurations[] =
 {
   8, 8, 8,
   2, 2,
@@ -166,55 +166,55 @@ int Sdurations[] =
   1
 };
 // Pirates of Caribbean sound from - https://github.com/hibit-dev/buzzer/tree/master/src/movies/pirates_of_the_caribbean
-int Pmelody[] = 
+int Pmelody[] =
 {
   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, REST,
   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, REST,
   NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, REST,
   NOTE_A4, NOTE_G4, NOTE_A4, REST,
-  
+
   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, REST,
   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, REST,
   NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, REST,
   NOTE_A4, NOTE_G4, NOTE_A4, REST,
-  
+
   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, REST,
   NOTE_A4, NOTE_C5, NOTE_D5, NOTE_D5, REST,
   NOTE_D5, NOTE_E5, NOTE_F5, NOTE_F5, REST,
   NOTE_E5, NOTE_D5, NOTE_E5, NOTE_A4, REST,
-  
+
   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, REST,
   NOTE_D5, NOTE_E5, NOTE_A4, REST,
   NOTE_A4, NOTE_C5, NOTE_B4, NOTE_B4, REST,
   NOTE_C5, NOTE_A4, NOTE_B4, REST,
-  
+
   NOTE_A4, NOTE_A4,
   //Repeat of first part
   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, REST,
   NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, REST,
   NOTE_A4, NOTE_G4, NOTE_A4, REST,
-  
+
   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, REST,
   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, REST,
   NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, REST,
   NOTE_A4, NOTE_G4, NOTE_A4, REST,
-  
+
   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, REST,
   NOTE_A4, NOTE_C5, NOTE_D5, NOTE_D5, REST,
   NOTE_D5, NOTE_E5, NOTE_F5, NOTE_F5, REST,
   NOTE_E5, NOTE_D5, NOTE_E5, NOTE_A4, REST,
-  
+
   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, REST,
   NOTE_D5, NOTE_E5, NOTE_A4, REST,
   NOTE_A4, NOTE_C5, NOTE_B4, NOTE_B4, REST,
   NOTE_C5, NOTE_A4, NOTE_B4, REST,
   //End of Repeat
-  
+
   NOTE_E5, REST, REST, NOTE_F5, REST, REST,
   NOTE_E5, NOTE_E5, REST, NOTE_G5, REST, NOTE_E5, NOTE_D5, REST, REST,
   NOTE_D5, REST, REST, NOTE_C5, REST, REST,
   NOTE_B4, NOTE_C5, REST, NOTE_B4, REST, NOTE_A4,
-  
+
   NOTE_E5, REST, REST, NOTE_F5, REST, REST,
   NOTE_E5, NOTE_E5, REST, NOTE_G5, REST, NOTE_E5, NOTE_D5, REST, REST,
   NOTE_D5, REST, REST, NOTE_C5, REST, REST,
@@ -227,49 +227,49 @@ int Pdurations[] = {
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8,
-  
+
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8,
-  
+
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 8, 4, 8,
-  
+
   8, 8, 4, 8, 8,
   4, 8, 4, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 4,
-  
+
   4, 8,
   //Repeat of First Part
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8,
-  
+
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8,
-  
+
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 8, 8,
   8, 8, 8, 4, 8,
-  
+
   8, 8, 4, 8, 8,
   4, 8, 4, 8,
   8, 8, 4, 8, 8,
   8, 8, 4, 4,
   //End of Repeat
-  
+
   4, 8, 4, 4, 8, 4,
   8, 8, 8, 8, 8, 8, 8, 8, 4,
   4, 8, 4, 4, 8, 4,
   8, 8, 8, 8, 8, 2,
-  
+
   4, 8, 4, 4, 8, 4,
   8, 8, 8, 8, 8, 8, 8, 8, 4,
   4, 8, 4, 4, 8, 4,
@@ -278,17 +278,17 @@ int Pdurations[] = {
 
 
 
-void setup() 
+void setup()
 {
-  
+
   Serial.begin(115200);   // Initialize serial communication
   SPI.begin();          // Initialize SPI bus
-  mfrc522.PCD_Init();   // Initialize MFRC522 RFID reader  
+  mfrc522.PCD_Init();   // Initialize MFRC522 RFID reader
   servo.attach(SERVO_PIN);
- 
- //Init ESP8266 Wifi
+
+  //Init ESP8266 Wifi
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) 
+  while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     Serial.print(F("."));
@@ -296,7 +296,7 @@ void setup()
   Serial.print(nom);
   Serial.print(F(" connected to Wifi! IP address : "));
   Serial.println(WiFi.localIP());  // Print the IP address
-  
+
   //init Buzzer
   pinMode(BUZZER_PIN, OUTPUT);
 }
@@ -327,7 +327,7 @@ void Pirates()
 void playStarWars()
 {
   int size = sizeof(Sdurations) / sizeof(int);
-  for (int i = 0; i < size; i++) 
+  for (int i = 0; i < size; i++)
   {
     //to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
@@ -344,19 +344,14 @@ void playStarWars()
   }
 }
 
-
-
-
-void loop()
+void checkRFID()
 {
-  getHostMessage();
-  
   if ( ! mfrc522.PICC_IsNewCardPresent()) // new cards
   {
     return;
   }
 
-  
+
   if ( ! mfrc522.PICC_ReadCardSerial()) // choose one of the cards
   {
     return;
@@ -364,22 +359,23 @@ void loop()
 
   // Print CARD ID on serial monitor
   Serial.print("CARD ID :");
-  String value= "";  
-  for (byte i = 0; i < mfrc522.uid.size; i++) 
+  String value = "";
+  for (byte i = 0; i < mfrc522.uid.size; i++)
   {
-     Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
-     Serial.print(mfrc522.uid.uidByte[i], HEX);
-     value.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : ""));
-     value.concat(String(mfrc522.uid.uidByte[i], HEX));
-  }    
+    Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? "0" : "");
+    Serial.print(mfrc522.uid.uidByte[i], HEX);
+    value.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? "0" : ""));
+    value.concat(String(mfrc522.uid.uidByte[i], HEX));
+  }
   Serial.println();
   value.toUpperCase();
- 
-// Check if the read ID is authorized
+
+  // Check if the read ID is authorized
   bool authorized = false;
-  for (int i = 0; i < sizeof(IDs) / sizeof(IDs[0]); i++) 
+  for (int i = 0; i < sizeof(IDs) / sizeof(IDs[0]); i++)
   {
-    if (value.substring(0) == IDs[i]) {
+    if (value.substring(0) == IDs[i])
+    {
       authorized = true;
       break;
     }
@@ -387,72 +383,111 @@ void loop()
 
   if (authorized)
   {
-    Serial.println("Authorized access");    
-    if(value.substring(0) == IDs[0])
+    Serial.println("Authorized access");
+    if (value.substring(0) == IDs[0])
     {
-     Serial.println("Access: Martin");
-     requestHost("Access: Martin");
-    
-     servo.write(180);
-     delay(2000);
-     servo.write(0); 
+      Serial.println("Access Martin");
+      requestHost("Access Martin");
 
-     delay(100);
-     playStarWars();
-     //Pirates
-        
     }
-    if(value.substring(0) == IDs[2])
+    if (value.substring(0) == IDs[2])
     {
-     Serial.println("Access: Magnus");
-     requestHost("Access: Magnus");
-     Pirates();
+      Serial.println("Access Magnus");
+      requestHost("Access Magnus");      
     }
-    
-  } 
-  else 
-  {
-    Serial.println("Access denied");    
-    requestHost("Access denied");
-    
+
   }
-  
-  delay(700);
-  Serial.println(); 
+  else
+  {
+    Serial.println("Access denied");
+    requestHost("Access denied");
 
+  }
+}
+
+void runServo()
+{
+  servo.write(180);
+  delay(2000);
+  servo.write(0);
+}
+
+void playError() {
+  tone(BUZZER_PIN, NOTE_G4);
+  delay(250);
+  tone(BUZZER_PIN, NOTE_C4);
+  delay(500);
+  noTone(BUZZER_PIN);
 }
 
 
-void requestHost(String msg) 
+void loop()
+{
+  checkRFID();
+  getHostMessage();
+}
+
+
+void requestHost(String msg)
 { /* function requestMaster */
   ////Request to host
-  if ((millis() - previousRequest) > UPDATE_TIME) 
-  {  // client connect to server every 500ms
+  if ((millis() - previousRequest) > UPDATE_TIME)
+  { // client connect to server every 500ms
     previousRequest = millis();
-    if (host.connect(server, 81)) 
-    {  // Connection to the server
-      host.println("c["+ nom +"]c" + ":  a[" + msg + "]a \r");
+    if (host.connect(server, 81))
+    { // Connection to the server
+      host.println("c[" + nom + "]c" + ":  a[" + msg + "]a \r");
     }
   }
 }
 
 void getHostMessage() {
-    if (host.connected()) {
+  host.setTimeout(200);
+  if (host.connected()) {
     String hostMsg = host.readString();
     if (!hostMsg.isEmpty()) {
       Serial.println(hostMsg);
       String hostSubstring = getSubstring(hostMsg, "r");
-      if (hostSubstring == "Open") {
-        openServo();
-      }
+      handleHostSubstring(hostSubstring);
     }
   }
 }
 
-String getSubstring(String request, String identifier) {
-  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
+void handleHostSubstring(String hostSubstring) 
+{
+  if (hostSubstring == "Open") // From Button on webpage
+      {
+        runServo();
+      }
+      else if (hostSubstring == "Access Martin") //RFID MARTIN
+      {
+        Serial.println(hostSubstring);
+        runServo();
+        delay(300);
+        playStarWars();
+      }
+      else if (hostSubstring == "Access Magnus") //RFID MAGNUS
+      {
+        Serial.println(hostSubstring);
+        runServo();
+        delay(300);
+        Pirates();
+      }
+      else if (hostSubstring == "Access OK") //Keypad
+      {
+        runServo();
+        delay(300);
+        playStarWars();
+      }
+      else
+      {
+        Serial.println(hostSubstring); //NO ACCESS
+        delay(300);
+        //PLAY ERROR SOUND!
+        playError();
+      }
 }
 
-void openServo() {
-  Serial.println("Servo open");
+String getSubstring(String request, String identifier) {
+  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
 }
