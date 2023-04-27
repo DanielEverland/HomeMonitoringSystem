@@ -127,10 +127,6 @@ void handleRFIDInput(String request) {
   rfidStatus = getClientSubstring(request, "a");
 }
 
-void handleRfidInput(String request) {
-  motionDetection = getClientSubstring(request, "c");
-}
-
 void handleKeypadInput(String request) {
   keypads = getClientSubstring(request, "k");
 }
@@ -157,7 +153,7 @@ void clientRequest() {
         handleProximityInput(request);
         proximityClient = client;
       } else if (clientName == rfidName) {
-        handleRfidInput(request);
+        handleRFIDInput(request);
         rfidClient = client;
       } else if (clientName == keypadName) {
         handleKeypadInput(request);
