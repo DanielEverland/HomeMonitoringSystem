@@ -15,7 +15,7 @@ const char* password = "expeditious";
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 127, 85);
+IPAddress server(192, 168, 66, 85);
 // Initialize DHT sensor.
 // From left to right facing the sensor:
 // S, VCC, GND
