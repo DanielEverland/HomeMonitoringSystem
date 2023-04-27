@@ -349,7 +349,8 @@ void playStarWars()
 
 void loop()
 {
- 
+  getHostMessage();
+  
   if ( ! mfrc522.PICC_IsNewCardPresent()) // new cards
   {
     return;
@@ -418,7 +419,7 @@ void loop()
   
   delay(700);
   Serial.println(); 
- 
+
 }
 
 
@@ -433,4 +434,25 @@ void requestHost(String msg)
       host.println("c["+ nom +"]c" + ":  a[" + msg + "]a \r");
     }
   }
+}
+
+void getHostMessage() {
+    if (host.connected()) {
+    String hostMsg = host.readString();
+    if (!hostMsg.isEmpty()) {
+      Serial.println(hostMsg);
+      String hostSubstring = getSubstring(hostMsg, "r");
+      if (hostSubstring == "Open") {
+        openServo();
+      }
+    }
+  }
+}
+
+String getSubstring(String request, String identifier) {
+  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
+}
+
+void openServo() {
+  Serial.println("Servo open");
 }
