@@ -456,17 +456,3 @@ String getSubstring(String request, String identifier) {
 void openServo() {
   Serial.println("Servo open");
 }
-
-
-void requestHost(String msg) 
-{ /* function requestMaster */
-  ////Request to host
-  if ((millis() - previousRequest) > UPDATE_TIME) 
-  {  // client connect to server every 500ms
-    previousRequest = millis();
-    if (host.connect(server, 81)) 
-    {  // Connection to the server
-      host.println("c["+ nom +"]c" + ":  a[" + msg + "]a \r");
-    }
-  }
-}
