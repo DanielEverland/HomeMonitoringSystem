@@ -18,9 +18,9 @@ const char *password = "expeditious";
 float t = 0.0;
 float h = 0.0;
 float l = 0.0;
-String motionDetection = "";
-String keypads = "";
-String rfidStatus = "";
+String motionDetection = "No motion";
+String keypads = "No access";
+String rfidStatus = "No access";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -65,6 +65,14 @@ String processor(const String &var)
   else if (var == "LIGHT")
   {
     return String(l);
+  }
+  else if (var == "RFID Status")
+  {
+    return rfidStatus;
+  }
+  else if (var == "Keypad Status")
+  {
+    return keypads;
   }
   return String();
 }
