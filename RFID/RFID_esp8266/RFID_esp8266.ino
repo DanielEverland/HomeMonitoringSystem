@@ -118,7 +118,7 @@ unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
 IPAddress server(192, 168, 127, 85);
-String accessString = "";
+String hostMsg = "";
 
 // Start wars sound from - https://github.com/hibit-dev/buzzer/tree/master/src/movies/star_wars
 int Smelody[] = 
@@ -346,8 +346,19 @@ void playStarWars()
 }
 
 void checkRFID()
-{
-   // Print CARD ID on serial monitor
+{ 
+  if ( ! mfrc522.PICC_IsNewCardPresent()) // new cards
+  {
+    return;
+  }
+
+  
+  if ( ! mfrc522.PICC_ReadCardSerial()) // choose one of the cards
+  {
+    return;
+  }
+
+  // Print CARD ID on serial monitor
   Serial.print("CARD ID :");
   String value= "";  
   for (byte i = 0; i < mfrc522.uid.size; i++) 
@@ -404,62 +415,42 @@ void runServo()
 }
 
 void playError() {
-  tone(buzzer, NOTE_G4);
+  tone(BUZZER_PIN, NOTE_G4);
   delay(250);
-  tone(buzzer, NOTE_C4);
+  tone(BUZZER_PIN, NOTE_C4);
   delay(500);
-  noTone(buzzer);
+  noTone(BUZZER_PIN);
 }
 
 
 void loop()
 {
- 
-  if ( ! mfrc522.PICC_IsNewCardPresent()) // new cards
-  {
-    return;
-  }  
-  if ( ! mfrc522.PICC_ReadCardSerial()) // choose one of the cards
-  {
-    return;
-  }
-
   checkRFID();
-  delay(1000);
+  getHostMessage();
 
-
-  host.setTimeout(200);
-  if(host.connected())
+  if(hostMsg == "Access Martin")//RFID MARTIN
   {
-    accessString = host.readString();
-    Serial.println(accessString);
-  }
-  
-
-  if(accessString == "Access Martin")//RFID MARTIN
-  {
-    Serial.println(accessString);
+    Serial.println(hostMsg);
     runServo();
     delay(300);
     playStarWars();
   }
-  else if(accessString == "Access Magnus")//RFID MAGNUS
+  else if(hostMsg == "Access Magnus")//RFID MAGNUS
   {
-    Serial.println(accessString);
+    Serial.println(hostMsg);
     runServo();
     delay(300);
     Pirates();
   }
-  else if(accessString == "Access OK")//Keypad
+  else if(hostMsg == "Access OK")//Keypad
   {
-    
     runServo();
     delay(300);
     playStarWars();
   }
   else
   {
-    Serial.println(accessString); //NO ACCESS   
+    Serial.println(hostMsg); //NO ACCESS   
     delay(300);
     //PLAY ERROR SOUND!
     playError();
@@ -478,4 +469,22 @@ void requestHost(String msg)
       host.println("c["+ nom +"]c" + ":  a[" + msg + "]a \r");
     }
   }
+}
+
+void getHostMessage() {
+  host.setTimeout(200);
+    if (host.connected()) {
+    hostMsg = host.readString();
+    if (!hostMsg.isEmpty()) {
+      Serial.println(hostMsg);
+      String hostSubstring = getSubstring(hostMsg, "r");
+      if (hostSubstring == "Open") {
+        runServo();
+      }
+    }
+  }
+}
+
+String getSubstring(String request, String identifier) {
+  return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
 }
