@@ -29,7 +29,7 @@ padding-bottom: 15px;
 </style>
 </head>
 <body>
-<h2>ESP8266 DHT Server</h2>
+<h2>ESP8266 Home monitoring system</h2>
 <p>
 <i class="fas fa-thermometer-half" style="color:#059e8a;"></i>
 <span class="dht-labels">Temperature</span>
@@ -61,6 +61,13 @@ padding-bottom: 15px;
 <i class="fas fa-exclamation"></i>
 <span class="dht-labels">Keypad</span>
 <span id="keypad">%Keypad Status%</span>
+</p>
+<p>
+<button class="button"
+onmousedown="toggleCheckbox('on');"
+ontouchstart="toggleCheckbox('on');">
+<span>OPEN DOOR</span>
+</button>
 </p>
 </body>
 <script>
@@ -124,6 +131,11 @@ document.getElementById("rfid").innerHTML = this.responseText;
 xhttp.open("GET", "/rfid", true);
 xhttp.send();
 }, 1000);
+function toggleCheckbox(x) {
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "/" + x, true);
+xhr.send();
+}
 </script>
 </html>
 )rawliteral";

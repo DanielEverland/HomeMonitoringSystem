@@ -11,8 +11,8 @@
 #include "Website.generated.h"
 
 // Network credentials
-const char* ssid = "Galaxy A53";
-const char* password = "expeditious";
+const char *ssid = "Galaxy A53";
+const char *password = "expeditious";
 
 // Initialize variables to hold data from nodes
 float t = 0.0;
@@ -27,12 +27,14 @@ AsyncWebServer server(80);
 
 // WiFi server for connecting clients on port 81
 WiFiServer wifiServer(81);
-
-// Define static IP, gateway and subnet for better consistency
-
-// TODO: Check if this breaks client communication
-IPAddress ip(192, 168, 127, 85);
-IPAddress gateway(192, 168, 127, 254);
+WiFiClient browser;
+WiFiClient temperetureClient;
+WiFiClient proximityClient;
+WiFiClient rfidClient;
+//WiFiClient
+//WiFiClient
+IPAddress ip(192, 168, 66, 85);
+IPAddress gateway(192, 168, 66, 254);
 IPAddress subnet(255, 255, 255, 0);
 
 // Names of nodes
@@ -40,7 +42,7 @@ const String proximityName = "ProximityNode";
 const String tempHumLightNode = "TemHumLightNode";
 const String tempHumNode = "TemperatureNode";
 const String keypadName = "KeypadNode";
-const String rfidNode = "RFIDNode";
+const String rfidName = "RFIDNode";
 
 // Function used to initialize values on website on initial load
 String processor(const String &var) {
@@ -59,7 +61,6 @@ String processor(const String &var) {
 void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
-
   // Connect to Wi-Fi
   WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid, password);
@@ -97,6 +98,12 @@ void setup() {
   server.on("/keypad", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send_P(200, "text/plain", keypads.c_str());
   });
+  server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request) {
+    // /on is called when lock is called to open
+    rfidClient.println("c[Server]c: r[Open]r");
+    request->send(200, "text/plain", "ok");
+  });
+
 
   // Start server
   server.begin();
@@ -115,6 +122,7 @@ void handleTemperatureInput(String request) {
 void handleProximityInput(String request) {
   motionDetection = getClientSubstring(request, "m");
 }
+
 void handleRFIDInput(String request) {
   rfidStatus = getClientSubstring(request, "a");
 }
@@ -140,12 +148,15 @@ void clientRequest() {
       String clientName = getClientSubstring(request, "c");
       if (clientName == tempHumLightNode) {
         handleTemperatureInput(request);
+        temperetureClient = client;
       } else if (clientName == proximityName) {
         handleProximityInput(request);
+        proximityClient = client;
+      } else if (clientName == rfidName) {
+        handleRFIDInput(request);
+        rfidClient = client;
       } else if (clientName == keypadName) {
         handleKeypadInput(request);
-      } else if (clientName == rfidNode) {
-        handleRFIDInput(request);
       } else {
         Serial.println("ERROR: Could not identify client name " + clientName);
       }
