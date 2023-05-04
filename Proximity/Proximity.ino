@@ -15,7 +15,7 @@ int inputPin = D7; // for ESP8266 microcontroller
 unsigned long previousRequest = 0;
 //Objects
 WiFiClient host;
-IPAddress server(192, 168, 127, 85);
+IPAddress server(192, 168, 66, 85);
 
 void setup() {
   pinMode(inputPin, INPUT);
