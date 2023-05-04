@@ -40,17 +40,18 @@ float humidity;
 int lightValue;
 
 // The pin used for the light sensor
-const int pResistor = A0;
+const int lightSensorPin = A0;
 
 void setup() {
-  pinMode(pResistor, INPUT);
-
+  // Init sensor
+  pinMode(lightSensorPin, INPUT);
   dht.begin();
-  //Init Serial USB
+
+  // Init Serial USB
   Serial.begin(115200);
   Serial.println(F("Initialize System"));
-  //Init ESP8266 Wifi
-
+  
+  // Init ESP8266 Wifi
   WiFi.begin(wifiName, wifiPassword);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -61,35 +62,51 @@ void setup() {
   Serial.println(WiFi.localIP());  // Print the IP address
 }
 
+// Main loop
 void loop() {
+  // If enough time has passed, do an update
   if ((millis() - previousRequest) > UPDATE_TIME) {
+
+    // Log the time this update happened
     previousRequest = millis();
-    dhtSensorLoop();
-    lightSensorLoop();
+
+    // Query temperature and humidity
+    queryTemperatureHumidity();
+
+    // Query light levels
+    queryLightSensor();
+
+    // Send data to server
     requestHost();
   }
 }
 
 void requestHost() {
   if (host.connect(server, 81)) {
-    // Remove light value if unused
+    // Actually send the formatted request to the host with client name, temperature, humidity and light levels
     host.println("c[" + peerName + "]c" + ": Current temperature is t[" + temperature + "]t Current humidity is h[" + humidity + "]h Current light level is: l[" + lightValue + "]l \r");
   }
 }
 
-void dhtSensorLoop() {
+// Query temperature and humidity
+void queryTemperatureHumidity() {
   // Read humidity
   humidity = dht.readHumidity();
   // Read temperature as Celsius (the default)
   temperature = dht.readTemperature();
 
+  // Debug printing
   Serial.print("Humidity: ");
   Serial.print(humidity);
   Serial.print(" %\t Temperature: ");
   Serial.print(temperature);
 }
 
-void lightSensorLoop() {
-  lightValue = analogRead(pResistor);
+// Query light sensor
+void queryLightSensor() {
+  // Read light value from sensor
+  lightValue = analogRead(lightSensorPin);
+
+  // Debug print light level
   Serial.print(lightValue);
 }
