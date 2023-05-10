@@ -9,15 +9,15 @@
 #include <Keypad.h>
 #include <ESP8266WiFi.h> 
 
+// Define nombers of rows and colums
 #define ROW_NUM     4 // four rows
 #define COLUMN_NUM  4 // three columns
 
-// WIFI
+// WIFI 
 #define UPDATE_TIME 1000
 
+// Define wifi pw and name + Node name
 String nom = "KeypadNode";
-//const char* ssid = "WiFimodem-9538";
-//const char* passwordWiFi = "gz2gtywyzn";
 const char* ssid = "Galaxy A53";
 const char* passwordWiFi = "expeditious";
 
@@ -27,6 +27,7 @@ WiFiClient host;
 IPAddress server(192, 168, 66, 85); 
 // WIFI END
 
+// Define keypad array
 char keys[ROW_NUM][COLUMN_NUM] = {
   {'1', '2', '3', 'A'},
   {'4', '5', '6', 'B'},
@@ -34,15 +35,19 @@ char keys[ROW_NUM][COLUMN_NUM] = {
   {'*', '0', '#', 'D'}
 };
 
+// Pins used by keypad
 byte pin_rows[ROW_NUM] = {D1, D2, D3, D4}; // GIOP18, GIOP5, GIOP17, GIOP16 connect to the row pins
 byte pin_column[COLUMN_NUM] = {D5, D6, D7, D8};   // GIOP4, GIOP0, GIOP2 connect to the column pins
 
+// Using keypad.h to make keymap
 Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM );
 
-const String password = "1111"; // change your password here
+// Keypad password
+const String password = "1111"; // 
 String input_password;
 
 void setup() {
+  // Setup serial
   Serial.begin(9600);
   input_password.reserve(32); // maximum input characters is 33, change if needed
 
@@ -60,27 +65,31 @@ void setup() {
 }
 
 void loop() {
+  // Handles the keypad through keypad.h
   handleKeypad();
+  // Get messages from server if there is any
   getHostMessage();
 }
 
 void handleKeypad(){
+  // Get the pressed key
   char key = keypad.getKey();
 
+  // Logic to find out if the correct key is pressed
   if (key) {
     Serial.println(key);
 
-    if (key == '*') {
+    if (key == '*') { // Restart if key = *
       Serial.println("Starting over");
       input_password = ""; // clear input password
-    } else if (key == 'D') {
-      if (password == input_password) {
+    } else if (key == 'D') { // Check password
+      if (password == input_password) { // Correct key
         Serial.println("The password is correct, ACCESS GRANTED!");
-        requestHost("ACCESS GRANTED");
+        requestHost("ACCESS GRANTED"); // Sends message to server
 
-      } else {
+      } else { // Wrong key
         Serial.println("The password is incorrect, ACCESS DENIED!");
-        requestHost("ACCESS DENIED");
+        requestHost("ACCESS DENIED"); // Sends message to server
       }
 
       input_password = ""; // clear input password
@@ -100,7 +109,7 @@ void requestHost(String Message) { /* function requestMaster */
   }
 }
 
-void getHostMessage() {
+void getHostMessage() { // Function to get messages from host.
   host.setTimeout(200);
   if (host.connected()) {
   String hostMsg = host.readString();
@@ -114,6 +123,6 @@ void getHostMessage() {
   }
 }
 
-String getSubstring(String request, String identifier) {
+String getSubstring(String request, String identifier) { // Unpack message from host
   return request.substring(request.indexOf(identifier + "[") + 2, request.lastIndexOf("]" + identifier));
 }
